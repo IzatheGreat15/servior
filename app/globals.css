@@ -5,6 +5,16 @@
   --foreground: #171717;
 }
 
+/* Hide scrollbars globally while preserving scrolling */
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and legacy Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, newer Edge */
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

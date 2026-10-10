@@ -3,6 +3,7 @@
 import { useEffect, type ReactNode } from "react";
 import InternalLayout from "@/components/internal/InternalLayout";
 import { staffNavigation } from "@/components/internal/navigation/staff";
+import { memberNavigation } from "@/components/internal/navigation/member";
 
 export default function InternalRouteLayout({
   children,
@@ -13,7 +14,7 @@ export default function InternalRouteLayout({
     console.log(staffNavigation);
   });
   return (
-    <InternalLayout navigationItems={staffNavigation.items}>
+    <InternalLayout navigationItems={memberNavigation.items}>
       {children}
     </InternalLayout>
   );

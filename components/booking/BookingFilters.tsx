@@ -17,7 +17,15 @@ type Props = {
 };
 
 export default function BookingFilters({
-  branch, setBranch, sport, setSport, date, setDate, branches, sports, onDateStep,
+  branch,
+  setBranch,
+  sport,
+  setSport,
+  date,
+  setDate,
+  branches,
+  sports,
+  onDateStep,
 }: Props) {
   const [today, setToday] = useState("");
 
@@ -31,7 +39,10 @@ export default function BookingFilters({
   }, []);
 
   return (
-    <section className="filters" aria-label="Booking filters">
+    <section
+      className="grid grid-cols-1 gap-4 rounded-[18px] p-4 sm:grid-cols-2 sm:px-5 sm:py-2 lg:grid-cols-3"
+      aria-label="Booking filters"
+    >
       <CustomSelect
         label="Branch"
         value={branch}
@@ -49,15 +60,50 @@ export default function BookingFilters({
         icon={CgTennis}
         searchable
       />
-      <div className="filter-field">
-        <label htmlFor="booking-date">Date</label>
-        <div className="filter-control date-control">
-          <span className="field-icon" aria-hidden="true">
-            <FaRegCalendar />
-          </span>
-          <input id="booking-date" type="date" min={today} value={date} onChange={(e) => setDate(e.target.value)} />
-          <button type="button" className="date-step" onClick={() => onDateStep(-1)} aria-label="Previous day">‹</button>
-          <button type="button" className="date-step" onClick={() => onDateStep(1)} aria-label="Next day">›</button>
+
+      {/* Date filter */}
+      <div className="flex min-w-0 flex-col gap-1.5">
+        <label
+          htmlFor="booking-date"
+          className="text-sm font-medium text-[#102d29]"
+        >
+          Date
+        </label>
+
+        <div className="flex h-11 min-w-0 items-center gap-2 rounded-lg border border-[#d8e2dc] bg-white px-3 transition-colors focus-within:border-[#13834e] focus-within:ring-2 focus-within:ring-[#13834e]/10">
+          <FaRegCalendar
+            className="shrink-0 text-[#6b8276]"
+            size={16}
+            aria-hidden="true"
+          />
+
+          <input
+            id="booking-date"
+            type="date"
+            min={today}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="min-w-0 flex-1 bg-transparent text-sm text-[#263f35] outline-none"
+          />
+
+          <button
+            type="button"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-lg leading-none text-[#718579] transition-colors hover:bg-[#e8f4ec] hover:text-[#13834e] disabled:cursor-not-allowed disabled:opacity-35"
+            onClick={() => onDateStep(-1)}
+            disabled={!date || date <= today}
+            aria-label="Previous day"
+          >
+            ‹
+          </button>
+
+          <button
+            type="button"
+            className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-lg leading-none text-[#718579] transition-colors hover:bg-[#e8f4ec] hover:text-[#13834e]"
+            onClick={() => onDateStep(1)}
+            aria-label="Next day"
+          >
+            ›
+          </button>
         </div>
       </div>
     </section>

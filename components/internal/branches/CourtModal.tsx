@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Court, DAYS, PricingRule } from "./types";
 import Field from "./Field";
 import PricingRuleEditor from "./PricingRuleEditor";
@@ -20,6 +20,52 @@ export default function CourtModal({
   const [active, setActive] = useState(court?.active ?? true);
   const [rules, setRules] = useState<PricingRule[]>(court?.rules ?? []);
   const [error, setError] = useState("");
+
+  // Photo state
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [photoPreview, setPhotoPreview] = useState<string | null>(
+    court?.photoUrl ?? null
+  );
+  const [removePhoto, setRemovePhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!photoFile) return;
+
+    const objectUrl = URL.createObjectURL(photoFile);
+    setPhotoPreview(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [photoFile]);
+
+  function handlePhotoChange(file?: File) {
+    setError("");
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setError("Please select an image file.");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setError("The photo must be 5 MB or smaller.");
+      return;
+    }
+
+    setPhotoFile(file);
+    setRemovePhoto(false);
+  }
+
+  function clearPhoto() {
+    setPhotoFile(null);
+    setPhotoPreview(null);
+    setRemovePhoto(true);
+
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  }
 
   function addRule() {
     setRules((current) => [
@@ -57,6 +103,7 @@ export default function CourtModal({
         const sameDay = rules[i].days.some((day) =>
           rules[j].days.includes(day)
         );
+
         const overlaps =
           rules[i].startTime < rules[j].endTime &&
           rules[j].startTime < rules[i].endTime;
@@ -73,6 +120,9 @@ export default function CourtModal({
       name: name.trim(),
       active,
       rules,
+      photoUrl: removePhoto ? null : court?.photoUrl ?? null,
+      photoFile,
+      removePhoto,
     });
   }
 
@@ -101,7 +151,7 @@ export default function CourtModal({
               {court ? "Edit court" : "Add court"}
             </h2>
             <p className="mt-1 text-sm text-slate-500">
-              Set up court details and hourly pricing.
+              Set up court details, photos, and hourly pricing.
             </p>
           </div>
 
@@ -127,6 +177,71 @@ export default function CourtModal({
                 value={name}
                 onChange={setName}
                 placeholder={`e.g. ${sportName} Court 1`}
+              />
+            </div>
+
+            {/* Court photo */}
+            <div className="mt-5">
+              <label className="mb-2 block text-sm font-semibold text-[#29483e]">
+                Court photo
+                <span className="ml-1 font-normal text-slate-400">
+                  (Optional)
+                </span>
+              </label>
+
+              {photoPreview ? (
+                <div className="relative overflow-hidden rounded-xl border border-[#dfe9e2]">
+                  <img
+                    src={photoPreview}
+                    alt="Court preview"
+                    className="h-48 w-full object-cover"
+                  />
+
+                  <div className="absolute right-3 top-3 flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-[#29483e] shadow hover:bg-[#edf8f1]"
+                    >
+                      Replace
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={clearPhoto}
+                      className="rounded-lg bg-white px-3 py-2 text-xs font-bold text-rose-600 shadow hover:bg-rose-50"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex w-full flex-col items-center justify-center rounded-xl border border-dashed border-[#b8d7c4] bg-[#fbfdfb] px-4 py-8 text-center transition hover:bg-[#edf8f1]"
+                >
+                  <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-[#e8f5ec] text-2xl text-[#13834e]">
+                    +
+                  </span>
+                  <span className="text-sm font-bold text-[#29483e]">
+                    Upload a court photo
+                  </span>
+                  <span className="mt-1 text-xs text-slate-500">
+                    PNG, JPG, or WEBP · Maximum 5 MB
+                  </span>
+                </button>
+              )}
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={(event) => {
+                  handlePhotoChange(event.target.files?.[0]);
+                  event.target.value = "";
+                }}
               />
             </div>
 
@@ -211,7 +326,10 @@ export default function CourtModal({
           </section>
 
           {error && (
-            <p role="alert" className="rounded-lg bg-rose-50 p-3 text-sm text-rose-700">
+            <p
+              role="alert"
+              className="rounded-lg bg-rose-50 p-3 text-sm text-rose-700"
+            >
               {error}
             </p>
           )}

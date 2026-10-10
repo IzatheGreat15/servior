@@ -11,6 +11,9 @@ export type Court = {
   name: string;
   active: boolean;
   rules: PricingRule[];
+  photoUrl?: string | null;
+  photoFile?: File | null;
+  removePhoto?: boolean;
 };
 
 export type SportGroupData = {

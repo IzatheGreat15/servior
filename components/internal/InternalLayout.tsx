@@ -1,7 +1,6 @@
-
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import type { ReactNode } from "react";
 
 import InternalSidebar from "./InternalSidebar";
@@ -34,12 +33,14 @@ export default function InternalLayout({
         />
       )}
 
-      <InternalSidebar
-        open={sidebarOpen}
-        onClose={closeSidebar}
-        items={navigationItems}
-        onSignOut={onSignOut}
-      />
+      <Suspense fallback={null}>
+        <InternalSidebar
+          open={sidebarOpen}
+          onClose={closeSidebar}
+          items={navigationItems}
+          onSignOut={onSignOut}
+        />
+      </Suspense>
 
       <div className="flex min-h-screen min-w-0 flex-1 flex-col md:ml-[260px]">
         <InternalNavbar

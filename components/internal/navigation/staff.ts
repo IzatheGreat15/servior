@@ -1,5 +1,5 @@
 
-"use client";
+"use client"
 
 import {
   LuLayoutDashboard,
@@ -24,17 +24,17 @@ export const staffNavigation: NavigationConfig = {
       children: [
         {
           label: "Branch 1",
-          href: "/branches/branch-1",
+          href: "/branches/branch-1/edit",
           icon: LuMapPin,
         },
         {
           label: "Branch 2",
-          href: "/branches/branch-2",
+          href: "/branches/branch-2/edit",
           icon: LuMapPin,
         },
         {
           label: "Add Branch",
-          href: "/branches/new",
+          href: "/branches/add",
           icon: LuPlus,
         },
       ],

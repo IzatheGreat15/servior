@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LuCalendarCheck, LuClock, LuPlus } from "react-icons/lu";
 import { Booking, mockBookings } from "../../bookings/types";
@@ -21,24 +21,27 @@ export default function MemberDashboardPage() {
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(
     null
   );
+  const [upcomingBookings, setUpcomingBookings] = useState<Booking[]>([]);
 
-  const upcomingBookings = useMemo(() => {
+  useEffect(() => {
     const now = new Date();
 
-    return bookings
-      .filter(
+      const filteredBookings = bookings
+        .filter(
         (booking) =>
-          booking.status === "confirmed" &&
-          booking.sessions.some(
-            (session) => new Date(session.date) >= now,
-          ),
-      )
-      .sort(
+            booking.status === "confirmed" &&
+            booking.sessions.some(
+              (session) => new Date(session.date) >= now,
+            ),
+        )
+        .sort(
         (a, b) =>
-          new Date(a.sessions[0]?.date ?? 0).getTime() -
-          new Date(b.sessions[0]?.date ?? 0).getTime(),
-      )
-      .slice(0, 3);
+            new Date(a.sessions[0]?.date ?? 0).getTime() -
+            new Date(b.sessions[0]?.date ?? 0).getTime(),
+        )   
+        .slice(0, 3);
+
+    setUpcomingBookings(filteredBookings);
   }, [bookings]);
 
   const totalHours = upcomingBookings.reduce(

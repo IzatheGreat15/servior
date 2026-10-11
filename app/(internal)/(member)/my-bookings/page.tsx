@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { LuCalendarPlus, LuSearch, LuX } from "react-icons/lu";
 import { Booking, mockBookings } from "@/components/internal/bookings/types";
@@ -51,11 +51,14 @@ function matchesTab(
 export default function BookingsPage() {
   const [activeTab, setActiveTab] = useState<BookingTab>("upcoming");
   const [search, setSearch] = useState("");
+  const [todayKey, setTodayKey] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(
     null
   );
 
-  const todayKey = getTodayKey();
+  useEffect(() => {
+    setTodayKey(getTodayKey);
+  }, []);
 
   const counts = useMemo<Record<BookingTab, number>>(() => {
     return {

@@ -38,201 +38,308 @@ const features = [
 export default function HomePage() {
     return (
         <main className="min-h-screen bg-white text-slate-900">
-            {/* Navigation */}
-            <nav className="border-b border-slate-100 bg-white">
-                <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
-                    <a href="/" className="flex items-center gap-2.5">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-200 text-white shadow-sm">
+            <div className="relative isolate overflow-hidden">
+                {/* Video background */}
+                    <video
+                        className="absolute inset-0 -z-20 h-full w-full object-cover"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        preload="metadata"
+                        poster="https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&w=2400&q=85"
+                    >
+                        <source src="https://www.pexels.com/download/video/17290112/" type="video/mp4" />
+                    </video>
+
+                    <div className="absolute inset-0 -z-10 bg-[#102d29]/80" />
+
+                {/* Navigation */}
+                <nav className="relative">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 lg:px-8">
+                        <a href="/" className="flex items-center gap-2.5">
                             <img src='/servior-logo.png' alt="Servior" className="w-9" />
+
+                            <img src='/servior-name-white-logo.png' alt="Servior" className="w-30" />
+                        </a>
+
+                        <div className="hidden items-center gap-8 text-sm font-medium text-gray-300 md:flex">
+                            <a href="#features" className="transition hover:text-green-600">
+                                Features
+                            </a>
+                            <a href="#payments" className="transition hover:text-green-600">
+                                Payments
+                            </a>
+                            <a href="#pricing" className="transition hover:text-green-600">
+                                Pricing
+                            </a>
                         </div>
 
-                        <img src='/servior-name-logo.png' alt="Servior" className="w-30" />
-                    </a>
+                        <div className="flex items-center gap-3">
+                            <a
+                                href="/login"
+                                className="hidden text-sm font-semibold text-gray-300 transition hover:text-slate-900 sm:block"
+                            >
+                                Sign in
+                            </a>
 
-                    <div className="hidden items-center gap-8 text-sm font-medium text-slate-600 md:flex">
-                        <a href="#features" className="transition hover:text-green-600">
-                            Features
-                        </a>
-                        <a href="#payments" className="transition hover:text-green-600">
-                            Payments
-                        </a>
-                        <a href="#pricing" className="transition hover:text-green-600">
-                            Pricing
-                        </a>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                        <a
-                            href="/login"
-                            className="hidden text-sm font-semibold text-slate-600 transition hover:text-slate-900 sm:block"
-                        >
-                            Sign in
-                        </a>
-
-                        <a
-                            href="/register"
-                            className="rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
-                        >
-                            Get started
-                        </a>
-                    </div>
-                </div>
-            </nav>
-
-            {/* Hero */}
-            <section className="relative overflow-hidden">
-                <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.12),_transparent_35%)]" />
-
-                <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
-                    <div>
-                        <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700">
-                            <span className="h-2 w-2 rounded-full bg-green-500" />
-                            Booking made simple
-                        </div>
-
-                        <h1 className="max-w-2xl text-5xl font-bold tracking-tight text-slate-950 sm:text-6xl">
-                            Make every booking{" "}
-                            <span className="text-green-600">effortless.</span>
-                        </h1>
-
-                        <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
-                            Servior helps sports facilities manage court bookings,
-                            payments, and customer notifications — all in one simple
-                            platform.
-                        </p>
-
-                        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                             <a
                                 href="/register"
-                                className="rounded-xl bg-green-600 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition hover:bg-green-700"
+                                className="rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700"
                             >
-                                Get Started
+                                Get started
                             </a>
-
-                            <a
-                                href="#features"
-                                className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                            >
-                                See how it works
-                            </a>
-                        </div>
-
-                        <div className="mt-8 flex items-center gap-6 text-sm text-slate-500">
-                            <span className="flex items-center gap-2">
-                                <span className="text-green-600">✓</span>
-                                Easy setup
-                            </span>
-
-                            <span className="flex items-center gap-2">
-                                <span className="text-green-600">✓</span>
-                                Online bookings
-                            </span>
-
-                            <span className="hidden items-center gap-2 sm:flex">
-                                <span className="text-green-600">✓</span>
-                                Secure payments
-                            </span>
                         </div>
                     </div>
+                </nav>
 
-                    {/* Booking UI Preview */}
-                    <div className="relative">
-                        <div className="absolute -inset-8 rounded-[3rem] bg-green-100/60 blur-3xl" />
+                {/* Hero */}
+                <section className="relative">
+                    <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top_right,_rgba(34,197,94,0.12),_transparent_35%)]" />
 
-                        <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl shadow-slate-900/10">
-                            {/* Mock browser header */}
-                            <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-4">
-                                <div className="h-2.5 w-2.5 rounded-full bg-slate-200" />
-                                <div className="h-2.5 w-2.5 rounded-full bg-slate-200" />
-                                <div className="h-2.5 w-2.5 rounded-full bg-slate-200" />
-
-                                <div className="ml-4 flex-1 rounded-md bg-slate-50 px-3 py-1.5 text-xs text-slate-400">
-                                    cebu-pickle.servior.com
-                                </div>
+                    <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
+                        <div>
+                            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700">
+                                <span className="h-2 w-2 rounded-full bg-green-500" />
+                                Booking made simple
                             </div>
 
-                            <div className="p-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-xs font-medium uppercase tracking-wide text-green-600">
-                                            Cebu Pickleball
-                                        </p>
-                                        <h3 className="mt-1 text-xl font-bold">
-                                            Book a court
-                                        </h3>
-                                    </div>
+                            <h1 className="max-w-2xl text-5xl font-bold tracking-tight text-gray-300 sm:text-6xl">
+                                Make every booking{" "}
+                                <span className="text-green-600">effortless.</span>
+                            </h1>
 
-                                    <div className="rounded-lg bg-green-50 px-3 py-2 text-sm font-semibold text-green-700">
-                                        Today
+                            <p className="mt-6 max-w-xl text-lg leading-8 text-gray-400">
+                                Servior helps sports facilities manage court bookings,
+                                payments, and customer notifications — all in one simple
+                                platform.
+                            </p>
+
+                            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+                                <a
+                                    href="/register"
+                                    className="rounded-xl bg-green-600 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition hover:bg-green-700"
+                                >
+                                    Get Started
+                                </a>
+
+                                <a
+                                    href="#features"
+                                    className="rounded-xl border border-slate-200 bg-white px-6 py-3.5 text-center text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                                >
+                                    See how it works
+                                </a>
+                            </div>
+
+                            <div className="mt-8 flex items-center gap-6 text-sm text-gray-400">
+                                <span className="flex items-center gap-2">
+                                    <span className="text-green-600">✓</span>
+                                    Easy setup
+                                </span>
+
+                                <span className="flex items-center gap-2">
+                                    <span className="text-green-600">✓</span>
+                                    Online bookings
+                                </span>
+
+                                <span className="flex items-center gap-2">
+                                    <span className="text-green-600">✓</span>
+                                    Secure payments
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Booking UI Preview */}
+                        <div className="relative">
+                            <div className="absolute" />
+
+                            <div className="relative overflow-hidden rounded-[18px] border border-[#deece3] bg-white/[0.96] shadow-[0_15px_45px_rgba(22,64,43,0.10)]">
+                                {/* Browser header */}
+                                <div className="flex items-center gap-2 border-b border-[#edf2ee] px-4 py-3 sm:px-5">
+                                    <span className="h-2.5 w-2.5 rounded-full bg-[#d8e2dc]" />
+                                    <span className="h-2.5 w-2.5 rounded-full bg-[#d8e2dc]" />
+                                    <span className="h-2.5 w-2.5 rounded-full bg-[#d8e2dc]" />
+
+                                    <div className="ml-3 min-w-0 flex-1 rounded-md bg-[#f8fbf9] px-3 py-1.5 text-xs text-[#809187]">
+                                        cebu-pickle.servior.com
                                     </div>
                                 </div>
 
-                                <div className="mt-6 grid grid-cols-3 gap-2">
-                                    {["Mon 12", "Tue 13", "Wed 14"].map((date, index) => (
-                                        <div
-                                            key={date}
-                                            className={`rounded-lg border p-3 text-center ${index === 1
-                                                ? "border-green-600 bg-green-600 text-white"
-                                                : "border-slate-200 text-slate-600"
-                                                }`}
-                                        >
-                                            <p className="text-xs">{date.split(" ")[0]}</p>
-                                            <p className="mt-1 font-semibold">{date.split(" ")[1]}</p>
+                                <div className="grid gap-5 p-4 sm:p-5">
+                                    {/* Booking heading */}
+                                    <div className="flex items-center gap-3">
+                                        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#e8f4ec] text-[#13834e]">
+                                            <svg
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="1.8"
+                                                className="h-5 w-5"
+                                            >
+                                                <rect x="3" y="4" width="18" height="17" rx="2" />
+                                                <path d="M16 2v4M8 2v4M3 10h18" />
+                                                <path d="m8 15 2 2 5-5" />
+                                            </svg>
+                                        </span>
+
+                                        <div className="min-w-0 flex-1">
+                                            <p className="text-xs font-semibold uppercase tracking-wide text-[#13834e]">
+                                                Cebu Pickleball
+                                            </p>
+                                            <h3 className="mt-0.5 text-lg font-bold tracking-tight text-[#102d29]">
+                                                Book a court
+                                            </h3>
                                         </div>
-                                    ))}
-                                </div>
 
-                                <p className="mt-6 text-sm font-semibold text-slate-700">
-                                    Available courts
-                                </p>
+                                        <span className="shrink-0 rounded-full border border-[#d6eadd] bg-[#f0f8f3] px-2.5 py-1 text-xs font-semibold text-[#13834e]">
+                                            Online booking
+                                        </span>
+                                    </div>
 
-                                <div className="mt-3 space-y-3">
-                                    {[
-                                        ["Court 1", "₱500 / hour"],
-                                        ["Court 2", "₱500 / hour"],
-                                        ["Court 3", "₱600 / hour"],
-                                    ].map(([court, price], index) => (
-                                        <div
-                                            key={court}
-                                            className={`flex items-center justify-between rounded-xl border p-4 ${index === 0
-                                                ? "border-green-200 bg-green-50"
-                                                : "border-slate-100"
-                                                }`}
-                                        >
-                                            <div>
-                                                <p className="font-semibold">{court}</p>
-                                                <p className="mt-0.5 text-xs text-slate-500">
-                                                    {price}
-                                                </p>
+                                    {/* Date selection */}
+                                    <div>
+                                        <div className="mb-3 flex items-center justify-between">
+                                            <p className="text-sm font-semibold text-[#263f35]">
+                                                Select a date
+                                            </p>
+                                            <span className="text-xs text-[#809187]">October 2026</span>
+                                        </div>
+
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {[
+                                                { day: "Mon", date: "12" },
+                                                { day: "Tue", date: "13" },
+                                                { day: "Wed", date: "14" },
+                                            ].map((item, index) => (
+                                                <div
+                                                    key={item.date}
+                                                    className={`rounded-xl border p-3 text-center transition ${index === 1
+                                                        ? "border-[#13834e] bg-[#13834e] text-white shadow-sm"
+                                                        : "border-[#e5eee8] bg-[#f8fbf9] text-[#52685b]"
+                                                        }`}
+                                                >
+                                                    <p className="text-xs">{item.day}</p>
+                                                    <p className="mt-1 text-lg font-bold">{item.date}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Available courts */}
+                                    <div>
+                                        <div className="mb-3 flex items-center justify-between">
+                                            <p className="text-sm font-semibold text-[#263f35]">
+                                                Available courts
+                                            </p>
+                                            <span className="text-xs text-[#809187]">3 courts</span>
+                                        </div>
+
+                                        <div className="space-y-2">
+                                            {[
+                                                { name: "Court 1", price: 500, selected: true },
+                                                { name: "Court 2", price: 500, selected: false },
+                                                { name: "Court 3", price: 600, selected: false },
+                                            ].map((court) => (
+                                                <div
+                                                    key={court.name}
+                                                    className={`flex items-center gap-3 rounded-xl border p-3 transition ${court.selected
+                                                        ? "border-[#c8dfd0] bg-[#f0f8f3]"
+                                                        : "border-[#e5eee8] bg-white"
+                                                        }`}
+                                                >
+                                                    <span
+                                                        className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ${court.selected
+                                                            ? "bg-[#dcefe2] text-[#13834e]"
+                                                            : "bg-[#f8fbf9] text-[#718579]"
+                                                            }`}
+                                                    >
+                                                        <svg
+                                                            viewBox="0 0 24 24"
+                                                            fill="none"
+                                                            stroke="currentColor"
+                                                            strokeWidth="1.7"
+                                                            className="h-5 w-5"
+                                                        >
+                                                            <rect x="3" y="3" width="18" height="18" rx="2" />
+                                                            <path d="M12 3v18M3 12h18" />
+                                                        </svg>
+                                                    </span>
+
+                                                    <div className="min-w-0 flex-1">
+                                                        <p className="text-sm font-semibold text-[#263f35]">
+                                                            {court.name}
+                                                        </p>
+                                                        <p className="mt-0.5 text-xs text-[#718579]">
+                                                            ₱{court.price.toLocaleString("en-PH")} / hour
+                                                        </p>
+                                                    </div>
+
+                                                    <span
+                                                        className={`shrink-0 rounded-lg px-3 py-2 text-xs font-semibold ${court.selected
+                                                            ? "bg-[#13834e] text-white"
+                                                            : "border border-[#d8e2dc] bg-white text-[#52685b]"
+                                                            }`}
+                                                    >
+                                                        {court.selected ? "Selected" : "Select"}
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Selected booking summary */}
+                                    <div className="rounded-xl border border-[#e1ebe5] bg-[#f8fbf9] p-4">
+                                        <div className="flex items-center justify-between gap-3">
+                                            <div className="flex min-w-0 items-center gap-2.5">
+                                                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#e8f4ec] text-[#13834e]">
+                                                    <svg
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        strokeWidth="1.8"
+                                                        className="h-5 w-5"
+                                                    >
+                                                        <circle cx="12" cy="12" r="9" />
+                                                        <path d="M12 7v5l3 2" />
+                                                    </svg>
+                                                </span>
+
+                                                <div className="min-w-0">
+                                                    <p className="text-xs text-[#718579]">Selected time slot</p>
+                                                    <p className="mt-0.5 truncate text-sm font-semibold text-[#263f35]">
+                                                        Court 1 · 7:00 PM – 8:00 PM
+                                                    </p>
+                                                </div>
                                             </div>
 
-                                            <button
-                                                className={`rounded-lg px-3 py-2 text-xs font-semibold ${index === 0
-                                                    ? "bg-green-600 text-white"
-                                                    : "bg-slate-100 text-slate-500"
-                                                    }`}
-                                            >
-                                                {index === 0 ? "Select" : "View"}
-                                            </button>
+                                            <span className="shrink-0 rounded-full border border-[#d6eadd] bg-[#f0f8f3] px-2 py-1 text-xs font-semibold text-[#13834e]">
+                                                1 hour
+                                            </span>
                                         </div>
-                                    ))}
-                                </div>
 
-                                <div className="mt-5 flex items-center justify-between rounded-xl bg-slate-950 p-4 text-white">
-                                    <div>
-                                        <p className="text-xs text-slate-400">Selected</p>
-                                        <p className="mt-1 font-semibold">Court 1 · 7:00 PM</p>
+                                        <div className="mt-4 flex items-center justify-between gap-3 border-t border-[#e1ebe5] pt-4">
+                                            <span className="text-sm font-medium text-[#34483d]">
+                                                Estimated total
+                                            </span>
+                                            <strong className="text-xl font-bold tracking-tight text-[#13834e]">
+                                                ₱500
+                                            </strong>
+                                        </div>
                                     </div>
 
-                                    <span className="rounded-lg bg-green-500 px-4 py-2 text-sm font-semibold">
-                                        Continue
-                                    </span>
+                                    {/* Continue action */}
+                                    <div className="space-y-2">
+                                        <div className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#13834e] px-4 text-sm font-semibold text-white shadow-sm">
+                                            Continue
+                                            <span aria-hidden="true" className="text-base">→</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
+                </section>
+            </div>
 
             {/* Features */}
             <section id="features" className="border-y border-slate-100 bg-slate-50">
@@ -327,7 +434,7 @@ export default function HomePage() {
                                     </p>
                                 </div>
 
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-200 text-white shadow-sm">
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white">
                                     <img src='/servior-logo.png' alt="Servior" className="w-9" />
                                 </div>
                             </div>
@@ -673,48 +780,65 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* CTA */}
-            <section id="pricing" className="bg-green-600">
-                <div className="mx-auto max-w-4xl px-6 py-20 text-center lg:px-8">
-                    <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                        Ready to make bookings simpler?
-                    </h2>
+            <div className="relative isolate overflow-hidden">
+                {/* Shared background image for CTA and Footer */}
+                <div
+                    className="absolute inset-0 -z-20 bg-cover bg-center"
+                    style={{
+                        backgroundImage:
+                            "url('https://images.unsplash.com/photo-1622279457486-62dcc4a431d6?auto=format&fit=crop&w=2400&q=85')",
+                    }}
+                />
 
-                    <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-green-50">
-                        Give your customers a better way to book and give your team more
-                        time to focus on running your facility.
-                    </p>
+                {/* Shared dark green overlay */}
+                <div className="absolute inset-0 -z-10 bg-[#102d29]/80" />
 
-                    <div className="mt-8">
-                        <a
-                            href="/register"
-                            className="inline-flex rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-green-700 shadow-lg transition hover:bg-green-50"
-                        >
-                            Get started with Servior
-                        </a>
+                {/* CTA */}
+                <section id="pricing" className="relative">
+                    <div className="mx-auto max-w-4xl px-6 py-20 text-center lg:px-8">
+                        <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                            Ready to make bookings simpler?
+                        </h2>
+
+                        <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-green-50">
+                            Give your customers a better way to book and give your team more
+                            time to focus on running your facility.
+                        </p>
+
+                        <div className="mt-8">
+                            <a
+                                href="/register"
+                                className="inline-flex rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-green-700 shadow-lg transition hover:bg-green-50"
+                            >
+                                Get started with Servior
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </section>
+                </section>
 
-            {/* Footer */}
-            <footer className="bg-gray-900 text-white">
-                <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between lg:px-8">
-                    <div className="bg-green-50/80 rounded p-2">
-                        <img src='/servior-name-logo.png' alt="Servior" className="w-30" />
+                {/* Footer */}
+                <footer className="relative text-white">
+                    <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 text-sm sm:flex-row sm:items-center sm:justify-between lg:px-8">
+                        <div className="rounded p-2">
+                            <img src='/servior-name-white-logo.png' alt="Servior" className="w-30" />
+                        </div>
+
+                        <p className="text-green-50/80">
+                            © 2026 Servior. All rights reserved.
+                        </p>
+
+                        <div className="flex gap-5">
+                            <a href="#" className="text-green-50/80 transition hover:text-white">
+                                Privacy
+                            </a>
+                            <a href="#" className="text-green-50/80 transition hover:text-white">
+                                Terms
+                            </a>
+                        </div>
                     </div>
+                </footer>
+            </div>
 
-                    <p>© 2026 Servior. All rights reserved.</p>
-
-                    <div className="flex gap-5">
-                        <a href="#" className="hover:text-slate-200">
-                            Privacy
-                        </a>
-                        <a href="#" className="hover:text-slate-200">
-                            Terms
-                        </a>
-                    </div>
-                </div>
-            </footer>
         </main>
     );
 }

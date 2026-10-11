@@ -70,9 +70,9 @@ export default function HomePage() {
                             <a href="#payments" className="transition hover:text-green-600">
                                 Payments
                             </a>
-                            <a href="#pricing" className="transition hover:text-green-600">
+                            {/* <a href="#pricing" className="transition hover:text-green-600">
                                 Pricing
-                            </a>
+                            </a> */}
                         </div>
 
                         <div className="flex items-center gap-3">
@@ -101,7 +101,8 @@ export default function HomePage() {
                         <div>
                             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-green-200 bg-green-50 px-3 py-1.5 text-sm font-medium text-green-700">
                                 <span className="h-2 w-2 rounded-full bg-green-500" />
-                                Booking made simple
+                                {/* Booking made simple */}
+                                LAUNCHING SOON
                             </div>
 
                             <h1 className="max-w-2xl text-5xl font-bold tracking-tight text-gray-300 sm:text-6xl">
@@ -120,7 +121,7 @@ export default function HomePage() {
                                     href="/register"
                                     className="rounded-xl bg-green-600 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition hover:bg-green-700"
                                 >
-                                    Get Started
+                                    Join the Waitlist
                                 </a>
 
                                 <a
@@ -329,7 +330,7 @@ export default function HomePage() {
 
                                     {/* Continue action */}
                                     <div className="space-y-2">
-                                        <div className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#13834e] px-4 text-sm font-semibold text-white shadow-sm">
+                                        <div className="flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-green-700 hover:bg-green-600 cursor-pointer px-4 text-sm font-semibold text-white shadow-sm">
                                             Continue
                                             <span aria-hidden="true" className="text-base">→</span>
                                         </div>
@@ -376,98 +377,6 @@ export default function HomePage() {
                                 </p>
                             </div>
                         ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Email Notifications */}
-            <section className="overflow-hidden">
-                <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 py-24 lg:grid-cols-2 lg:px-8">
-                    <div>
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600">
-                            <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="1.8"
-                                className="h-6 w-6"
-                            >
-                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z" />
-                                <path d="m22 6-10 7L2 6" />
-                            </svg>
-                        </div>
-
-                        <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
-                            Keep customers in the loop automatically.
-                        </h2>
-
-                        <p className="mt-5 text-lg leading-8 text-slate-600">
-                            No more manually sending booking confirmations. Servior keeps
-                            your customers informed from the moment they book.
-                        </p>
-
-                        <div className="mt-8 space-y-4">
-                            {[
-                                "Booking confirmation",
-                                "Payment confirmation",
-                                "Cancellation updates",
-                                "Booking reminders",
-                            ].map((item) => (
-                                <div key={item} className="flex items-center gap-3">
-                                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-600">
-                                        ✓
-                                    </div>
-                                    <span className="font-medium text-slate-700">{item}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* Email mockup */}
-                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-xl">
-                        <div className="rounded-xl border border-slate-200 bg-white p-6">
-                            <div className="flex items-center justify-between border-b border-slate-100 pb-5">
-                                <div>
-                                    <img src='/servior-name-logo.png' alt="Servior" className="w-20" />
-                                    <p className="mt-1 text-xs text-slate-400">
-                                        Booking confirmation
-                                    </p>
-                                </div>
-
-                                <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white">
-                                    <img src='/servior-logo.png' alt="Servior" className="w-9" />
-                                </div>
-                            </div>
-
-                            <div className="py-6">
-                                <p className="text-sm text-slate-500">Hi Kathleen,</p>
-
-                                <h3 className="mt-2 text-xl font-bold">
-                                    Your booking is confirmed!
-                                </h3>
-
-                                <div className="mt-6 rounded-xl bg-green-50 p-5">
-                                    <p className="text-xs font-semibold uppercase tracking-wide text-green-600">
-                                        Cebu Pickleball
-                                    </p>
-
-                                    <p className="mt-3 font-bold">Court 1</p>
-
-                                    <p className="mt-1 text-sm text-slate-600">
-                                        Tuesday, October 13 · 7:00 PM – 8:00 PM
-                                    </p>
-
-                                    <div className="mt-4 flex justify-between border-t border-green-100 pt-4 text-sm">
-                                        <span className="text-slate-500">Total</span>
-                                        <span className="font-bold">₱500.00</span>
-                                    </div>
-                                </div>
-
-                                <button className="mt-6 w-full rounded-lg bg-green-600 py-3 text-sm font-semibold text-white">
-                                    View booking
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -541,8 +450,100 @@ export default function HomePage() {
                 </div>
             </section>
 
+            {/* Email Notifications */}
+            <section className="overflow-hidden">
+                <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 py-24 lg:grid-cols-2 lg:px-8">
+                    <div>
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-green-50 text-green-600">
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                                className="h-6 w-6"
+                            >
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2Z" />
+                                <path d="m22 6-10 7L2 6" />
+                            </svg>
+                        </div>
+
+                        <h2 className="mt-6 text-3xl font-bold tracking-tight sm:text-4xl">
+                            Keep customers in the loop automatically.
+                        </h2>
+
+                        <p className="mt-5 text-lg leading-8 text-slate-600">
+                            No more manually sending booking confirmations. Servior keeps
+                            your customers informed from the moment they book.
+                        </p>
+
+                        <div className="mt-8 space-y-4">
+                            {[
+                                "Booking confirmation",
+                                "Payment confirmation",
+                                "Cancellation updates",
+                                "Booking reminders",
+                            ].map((item) => (
+                                <div key={item} className="flex items-center gap-3">
+                                    <div className="flex h-6 w-6 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-600">
+                                        ✓
+                                    </div>
+                                    <span className="font-medium text-slate-700">{item}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Email mockup */}
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 shadow-xl">
+                        <div className="rounded-xl border border-slate-200 bg-white p-6">
+                            <div className="flex items-center justify-between border-b border-slate-100 pb-5">
+                                <div>
+                                    <img src='/servior-name-logo.png' alt="Servior" className="w-20" />
+                                    <p className="mt-1 text-xs text-slate-400">
+                                        Booking confirmation
+                                    </p>
+                                </div>
+
+                                <div className="flex h-12 w-12 items-center justify-center rounded-xl text-white">
+                                    <img src='/servior-logo.png' alt="Servior" className="w-9" />
+                                </div>
+                            </div>
+
+                            <div className="py-6">
+                                <p className="text-sm text-slate-500">Hi Juan,</p>
+
+                                <h3 className="mt-2 text-xl font-bold">
+                                    Your booking is confirmed!
+                                </h3>
+
+                                <div className="mt-6 rounded-xl bg-green-50 p-5">
+                                    <p className="text-xs font-semibold uppercase tracking-wide text-green-600">
+                                        Cebu Pickleball
+                                    </p>
+
+                                    <p className="mt-3 font-bold">Court 1</p>
+
+                                    <p className="mt-1 text-sm text-slate-600">
+                                        Tuesday, October 13 · 7:00 PM – 8:00 PM
+                                    </p>
+
+                                    <div className="mt-4 flex justify-between border-t border-green-100 pt-4 text-sm">
+                                        <span className="text-slate-500">Total</span>
+                                        <span className="font-bold">₱500.00</span>
+                                    </div>
+                                </div>
+
+                                <button className="mt-6 w-full rounded-lg bg-green-600 hover:bg-green-500 py-3 text-sm font-semibold text-white">
+                                    View booking
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Pricing */}
-            <section id="pricing" className="bg-gray-50 py-24">
+            {/* <section id="pricing" className="bg-gray-50 py-24">
                 <div className="mx-auto max-w-7xl px-6 lg:px-8">
                     <div className="mx-auto max-w-2xl text-center">
                         <span className="inline-flex rounded-full bg-green-100 px-4 py-1.5 text-sm font-semibold text-green-700">
@@ -558,9 +559,9 @@ export default function HomePage() {
                         </p>
                     </div>
 
-                    <div className="mx-auto mt-12 grid max-w-6xl gap-8 lg:grid-cols-3">
+                    <div className="mx-auto mt-12 grid max-w-6xl gap-8 lg:grid-cols-3"> */}
                         {/* Starter */}
-                        <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+                        {/* <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900">
                                     Starter
@@ -624,10 +625,10 @@ export default function HomePage() {
                             >
                                 Get started
                             </a>
-                        </div>
+                        </div> */}
 
                         {/* Growth */}
-                        <div className="relative flex flex-col rounded-3xl border-2 border-green-500 bg-white p-8 shadow-xl shadow-green-100/50">
+                        {/* <div className="relative flex flex-col rounded-3xl border-2 border-green-500 bg-white p-8 shadow-xl shadow-green-100/50">
                             <div className="absolute -top-4 left-1/2 -translate-x-1/2">
                                 <span className="rounded-full bg-green-600 px-4 py-1.5 text-xs font-bold text-white shadow-sm">
                                     MOST POPULAR
@@ -700,10 +701,10 @@ export default function HomePage() {
                             >
                                 Get started
                             </a>
-                        </div>
+                        </div> */}
 
                         {/* Business */}
-                        <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
+                        {/* <div className="flex flex-col rounded-3xl border border-gray-200 bg-white p-8 shadow-sm">
                             <div>
                                 <h3 className="text-xl font-bold text-gray-900">
                                     Business
@@ -772,13 +773,13 @@ export default function HomePage() {
                                 Contact us
                             </a>
                         </div>
-                    </div>
+                    </div> */}
 
-                    <p className="mt-10 text-center text-sm text-gray-500">
+                    {/* <p className="mt-10 text-center text-sm text-gray-500">
                         Need more branches? Contact us for a custom plan.
                     </p>
                 </div>
-            </section>
+            </section> */}
 
             <div className="relative isolate overflow-hidden">
                 {/* Shared background image for CTA and Footer */}
@@ -801,8 +802,10 @@ export default function HomePage() {
                         </h2>
 
                         <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-green-50">
-                            Give your customers a better way to book and give your team more
-                            time to focus on running your facility.
+                            {/* Give your customers a better way to book and give your team more
+                            time to focus on running your facility. */}
+
+                            Join our waitlist to get early access, enjoy exclusive perks for early adopters, and help shape a platform designed to save you time and grow your business.
                         </p>
 
                         <div className="mt-8">
@@ -810,7 +813,7 @@ export default function HomePage() {
                                 href="/register"
                                 className="inline-flex rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-green-700 shadow-lg transition hover:bg-green-50"
                             >
-                                Get started with Servior
+                                Join the Waitlist
                             </a>
                         </div>
                     </div>

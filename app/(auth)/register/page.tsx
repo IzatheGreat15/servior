@@ -120,7 +120,7 @@ export default function RegisterPage() {
 
         <button
           type="submit"
-          className="w-full rounded-xl bg-sky-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-500/20 active:scale-[0.99]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
         >
           Create account
         </button>

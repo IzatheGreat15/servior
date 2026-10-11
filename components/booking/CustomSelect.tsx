@@ -66,7 +66,7 @@ export default function CustomSelect({
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
       {/* Label */}
-      <label className="text-sm font-medium text-[#102d29]">
+      <label className="text-sm font-medium text-gray-400">
         {label}
       </label>
 

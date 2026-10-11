@@ -91,31 +91,24 @@ export default function BookingPage() {
 
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-brand-background text-slate-900">
+    <main className="relative min-h-screen overflow-hidden bg-brand-background text-gray-300">
       {/* Background overlay */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center"
         style={{
-          backgroundImage: `
-          linear-gradient(
-            90deg,
-            rgba(245, 251, 247, 0.75) 40%,
-            rgba(245, 251, 247, 0.60) 100%,
-            rgba(245, 251, 247, 0.40) 100%
-          ),
-          url("https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=2200&q=85")
-        `,
-          backgroundAttachment: "fixed",
+          backgroundImage:
+            "url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=2200&q=85')",
         }}
-        aria-hidden="true"
       />
+
+      <div className="absolute inset-0 bg-brand-dark/40" />
 
       <div className="relative z-10 mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-10">
         <BookingHeader />
 
         <section className="mb-8 mt-10 px-5">
-          <div className="mb-3 flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-brand">
-            <span className="h-2 w-2 rounded-full bg-brand" />
+          <div className="mb-3 flex items-center gap-2 text-xs font-bold tracking-[0.2em] text-green-400">
+            <span className="h-2 w-2 rounded-full bg-green-400" />
             YOUR NEXT GAME STARTS HERE
           </div>
 
@@ -123,7 +116,7 @@ export default function BookingPage() {
             Book your court<span className="text-brand">.</span>
           </h1>
 
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base">
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-greay-300 sm:text-base">
             Choose a branch, sport, and time. Select multiple slots if you need
             a longer session or want to book more than one court.
           </p>
@@ -148,10 +141,10 @@ export default function BookingPage() {
           <section className="min-w-0 rounded-2xl p-4 sm:p-6 sm:py-0">
             <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
               <div>
-                <h2 className="text-xl font-bold text-slate-900">
+                <h2 className="text-xl font-bold text-gray-300">
                   Choose your time
                 </h2>
-                <p className="mt-1 text-sm text-slate-500">
+                <p className="mt-1 text-sm text-gray-300">
                   Tap an available hour to select or deselect it.
                 </p>
               </div>
@@ -178,17 +171,16 @@ export default function BookingPage() {
           />
         </div>
 
-        <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-brand-border py-2 text-sm text-slate-500">
+        <footer className="mt-12 flex flex-wrap items-center justify-between gap-3 border-brand-border py-2 text-sm text-gray-300">
           <div className="flex gap-2 items-center">
-            <img src="/servior-logo.png" alt="" className="h-8 w-8 object-contain" />
-            <span>Powered by</span>
+            <span className="text-gray-200">Powered by</span>
             <img
-              src="/servior-name-logo.png"
+              src="/servior-name-white-logo.png"
               alt="Servior"
               className="w-16 object-contain"
             />
           </div>
-          <span className="text-slate-400">Book. Play. Repeat.</span>
+          <span className="text-gray-200">Book. Play. Repeat.</span>
         </footer>
       </div>
 
@@ -208,7 +200,7 @@ export default function BookingPage() {
             aria-labelledby="guest-modal-title"
           >
             <button
-              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-2xl text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full text-2xl text-gray-300 transition hover:bg-slate-100 hover:text-gray-300"
               type="button"
               onClick={() => setShowGuestForm(false)}
               aria-label="Close"
@@ -222,12 +214,12 @@ export default function BookingPage() {
 
             <h2
               id="guest-modal-title"
-              className="mt-3 text-2xl font-bold text-slate-900"
+              className="mt-3 text-2xl font-bold text-gray-300"
             >
               Your booking details
             </h2>
 
-            <p className="mt-2 text-sm leading-6 text-slate-500">
+            <p className="mt-2 text-sm leading-6 text-gray-300">
               You can book as a guest—no account or login required.
             </p>
 
@@ -244,7 +236,7 @@ export default function BookingPage() {
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="e.g. Alex Santos"
                   autoComplete="name"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-gray-200 focus:border-brand focus:ring-2 focus:ring-brand/15"
                 />
               </label>
 
@@ -257,19 +249,19 @@ export default function BookingPage() {
                   onChange={(e) => setGuestEmail(e.target.value)}
                   placeholder="you@example.com"
                   autoComplete="email"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-gray-200 focus:border-brand focus:ring-2 focus:ring-brand/15"
                 />
               </label>
 
               <label className="block text-sm font-semibold text-slate-700">
-                Mobile number <span className="font-normal text-slate-400">Optional</span>
+                Mobile number <span className="font-normal text-gray-200">Optional</span>
                 <input
                   type="tel"
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
                   placeholder="+63 9XX XXX XXXX"
                   autoComplete="tel"
-                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-slate-400 focus:border-brand focus:ring-2 focus:ring-brand/15"
+                  className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 font-normal outline-none transition placeholder:text-gray-200 focus:border-brand focus:ring-2 focus:ring-brand/15"
                 />
               </label>
 

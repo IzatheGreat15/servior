@@ -11,6 +11,7 @@ import {
 
 import BookingDetailsModal from "../../bookings/BookingDetailsModal";
 import { Booking } from "../../bookings/types";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 type Props = {
   bookings: Booking[];
@@ -240,23 +241,21 @@ export default function BookingsTable({
                 Booking status
               </label>
 
-              <select
+              <CustomSelect
                 id="booking-status"
                 value={status}
-                onChange={(event) => {
-                  setStatus(event.target.value);
+                onChange={(value) => {
+                  setStatus(value);
                   setPage(1);
                 }}
-                className="w-full rounded-xl border border-[#d8e2dc] bg-white px-3 py-2.5 text-sm text-[#102d29] outline-none focus:border-[#13834e]"
-              >
-                <option value="all">All statuses</option>
-
-                {statuses.map((item) => (
-                  <option key={item} value={item}>
-                    {formatStatus(item)}
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { label: "All statuses", value: "all" },
+                  ...statuses.map((item) => ({
+                    label: formatStatus(item),
+                    value: item,
+                  })),
+                ]}
+              />
             </div>
 
             <div>
@@ -267,20 +266,20 @@ export default function BookingsTable({
                 Payment status
               </label>
 
-              <select
+              <CustomSelect
                 id="payment-status"
                 value={paymentStatus}
-                onChange={(event) => {
-                  setPaymentStatus(event.target.value);
+                onChange={(value) => {
+                  setPaymentStatus(value);
                   setPage(1);
                 }}
-                className="w-full rounded-xl border border-[#d8e2dc] bg-white px-3 py-2.5 text-sm text-[#102d29] outline-none focus:border-[#13834e]"
-              >
-                <option value="all">All payments</option>
-                <option value="paid">Paid</option>
-                <option value="unpaid">Unpaid</option>
-                <option value="refunded">Refunded</option>
-              </select>
+                options={[
+                  { label: "All payments", value: "all" },
+                  { label: "Paid", value: "paid" },
+                  { label: "Unpaid", value: "unpaid" },
+                  { label: "Refunded", value: "refunded" },
+                ]}
+              />
             </div>
 
             <div>
@@ -291,23 +290,21 @@ export default function BookingsTable({
                 Branch
               </label>
 
-              <select
+              <CustomSelect
                 id="booking-branch"
                 value={branch}
-                onChange={(event) => {
-                  setBranch(event.target.value);
+                onChange={(value) => {
+                  setBranch(value);
                   setPage(1);
                 }}
-                className="w-full rounded-xl border border-[#d8e2dc] bg-white px-3 py-2.5 text-sm text-[#102d29] outline-none focus:border-[#13834e]"
-              >
-                <option value="all">All branches</option>
-
-                {branches.map((item) => (
-                  <option key={item} value={item}>
-                    {item}
-                  </option>
-                ))}
-              </select>
+                options={[
+                  { label: "All branches", value: "all" },
+                  ...branches.map((item) => ({
+                    label: item,
+                    value: item,
+                  })),
+                ]}
+              />
             </div>
 
             <div className="flex items-end">

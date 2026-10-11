@@ -104,12 +104,9 @@ export default function BookingsPage() {
 
   return (
     <div className="min-h-screen bg-[#f7faf8]">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <p className="text-sm font-semibold text-[#13834e]">
-              Member portal
-            </p>
             <h1 className="mt-1 text-2xl font-bold tracking-tight text-[#102d29] sm:text-3xl">
               My Bookings
             </h1>

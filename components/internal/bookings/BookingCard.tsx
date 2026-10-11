@@ -34,7 +34,7 @@ function formatTime(time: string) {
   });
 }
 
-function getSessionDuration(session: BookingSession) {
+export function getSessionDuration(session: BookingSession) {
   const [startHours, startMinutes] = session.startTime.split(":").map(Number);
   const [endHours, endMinutes] = session.endTime.split(":").map(Number);
 
@@ -79,115 +79,129 @@ export default function BookingCard({
   );
 
   return (
-    <article className="rounded-2xl border border-[#d8e2dc] bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
-                statusStyles[booking.status]
-              }`}
-            >
-              {booking.status}
-            </span>
+  <article className="rounded-2xl border border-[#d8e2dc] bg-white p-5 shadow-sm transition hover:shadow-md sm:p-6">
+    <div className="flex gap-4">
+      {/* Court image on the left */}
+      { booking.courtImage && <div className="h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#f7faf8] sm:h-32 sm:w-32">
+        <img
+          src={booking.courtImage}
+          alt={`${booking.sport} court`}
+          className="h-full w-full object-cover"
+        />
+      </div> }
 
-            <span className="text-xs text-gray-400">
-              Ref: {booking.reference}
-            </span>
-          </div>
-
-          <h3 className="mt-3 text-lg font-bold text-[#102d29]">
-            {booking.venueName}
-          </h3>
-
-          <p className="mt-1 text-sm text-gray-500">
-            {booking.branchName} · {booking.sport} · {booking.courtName}
-          </p>
-
-          <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-500">
-            <LuMapPin size={15} className="shrink-0" />
-            {booking.address}
-          </p>
-        </div>
-
-        <div className="sm:text-right">
-          <p className="text-xs text-gray-400">Total amount</p>
-          <p className="mt-1 text-2xl font-bold text-[#102d29]">
-            ₱{totalPrice.toLocaleString("en-PH")}
-          </p>
-          <p className="mt-1 text-xs text-gray-500">
-            {sessions.length}{" "}
-            {sessions.length === 1 ? "session" : "sessions"}
-          </p>
-        </div>
-      </div>
-
-      <div className="my-5 border-t border-[#edf1ee]" />
-
-      {firstSession ? (
-        <div className="rounded-xl bg-[#f7faf8] p-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#e8f4ec] text-[#13834e]">
-              <LuCalendarDays size={20} />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
-                {sessions.length > 1 ? "Next session" : "Session date"}
-              </p>
-
-              <p className="mt-1 font-semibold text-[#102d29]">
-                {formatDate(firstSession.date)}
-              </p>
-
-              <p className="mt-1 flex items-center gap-1.5 text-sm text-gray-500">
-                <LuClock3 size={15} />
-                {formatTime(firstSession.startTime)} –{" "}
-                {formatTime(firstSession.endTime)}
-              </p>
-            </div>
-
-            {sessions.length > 1 && (
-              <span className="shrink-0 rounded-lg border border-[#d8e2dc] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#13834e]">
-                +{sessions.length - 1} more
+      {/* Existing booking content */}
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0">
+            <div className="flex flex-wrap items-center gap-2">
+              <span
+                className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${
+                  statusStyles[booking.status]
+                }`}
+              >
+                {booking.status}
               </span>
-            )}
+
+              <span className="text-xs text-gray-400">
+                Ref: {booking.reference}
+              </span>
+            </div>
+
+            <h3 className="mt-3 text-lg font-bold text-[#102d29]">
+              {booking.venueName}
+            </h3>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {booking.branchName} · {booking.sport} · {booking.courtName}
+            </p>
+
+            <p className="mt-2 flex items-center gap-1.5 text-sm text-gray-500">
+              <LuMapPin size={15} className="shrink-0" />
+              {booking.address}
+            </p>
+          </div>
+
+          <div className="shrink-0 sm:text-right">
+            <p className="text-xs text-gray-400">Total amount</p>
+            <p className="mt-1 text-2xl font-bold text-[#102d29]">
+              ₱{totalPrice.toLocaleString("en-PH")}
+            </p>
+            <p className="mt-1 text-xs text-gray-500">
+              {sessions.length}{" "}
+              {sessions.length === 1 ? "session" : "sessions"}
+            </p>
           </div>
         </div>
-      ) : (
-        <p className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
-          No sessions available.
-        </p>
-      )}
-
-      <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500">
-        <span className="flex items-center gap-1.5">
-          <LuLayers3 size={16} />
-          {formatHours(totalHours)} total
-        </span>
-
-        <span>
-          Payment:{" "}
-          <span
-            className={`font-semibold capitalize ${
-              paymentStyles[booking.paymentStatus]
-            }`}
-          >
-            {booking.paymentStatus}
-          </span>
-        </span>
       </div>
+    </div>
 
-      <div className="mt-5 flex justify-end border-t border-[#edf1ee] pt-4">
-        <button
-          type="button"
-          onClick={() => onViewDetails(booking)}
-          className="cursor-pointer inline-flex items-center gap-2 rounded-xl border border-[#d8e2dc] px-4 py-2.5 text-sm font-semibold text-[#102d29] transition hover:border-[#13834e] hover:bg-[#f7faf8]"
+    <div className="my-5 border-t border-[#edf1ee]" />
+
+    {firstSession ? (
+      <div className="rounded-xl bg-[#f7faf8] p-4">
+        <div className="flex items-start gap-3">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[#e8f4ec] text-[#13834e]">
+            <LuCalendarDays size={20} />
+          </div>
+
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">
+              {sessions.length > 1 ? "Next session" : "Session date"}
+            </p>
+
+            <p className="mt-1 font-semibold text-[#102d29]">
+              {formatDate(firstSession.date)}
+            </p>
+
+            <p className="mt-1 flex items-center gap-1.5 text-sm text-gray-500">
+              <LuClock3 size={15} />
+              {formatTime(firstSession.startTime)} –{" "}
+              {formatTime(firstSession.endTime)}
+            </p>
+          </div>
+
+          {sessions.length > 1 && (
+            <span className="shrink-0 rounded-lg border border-[#d8e2dc] bg-white px-2.5 py-1.5 text-xs font-semibold text-[#13834e]">
+              +{sessions.length - 1} more
+            </span>
+          )}
+        </div>
+      </div>
+    ) : (
+      <p className="rounded-xl bg-gray-50 p-4 text-sm text-gray-500">
+        No sessions available.
+      </p>
+    )}
+
+    <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500">
+      <span className="flex items-center gap-1.5">
+        <LuLayers3 size={16} />
+        {formatHours(totalHours)} total
+      </span>
+
+      <span>
+        Payment:{" "}
+        <span
+          className={`font-semibold capitalize ${
+            paymentStyles[booking.paymentStatus]
+          }`}
         >
-          View booking
-          <LuChevronRight size={16} />
-        </button>
-      </div>
-    </article>
-  );
+          {booking.paymentStatus}
+        </span>
+      </span>
+    </div>
+
+    <div className="mt-5 flex justify-end border-t border-[#edf1ee] pt-4">
+      <button
+        type="button"
+        onClick={() => onViewDetails(booking)}
+        className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-[#d8e2dc] px-4 py-2.5 text-sm font-semibold text-[#102d29] transition hover:border-[#13834e] hover:bg-[#f7faf8]"
+      >
+        View booking
+        <LuChevronRight size={16} />
+      </button>
+    </div>
+  </article>
+);
 }

@@ -27,6 +27,7 @@ export type Booking = {
   address: string;
   createdAt: string;
   notes?: string;
+  courtImage?: string;
 };
 
 export const mockBookings: Booking[] = [
@@ -35,6 +36,7 @@ export const mockBookings: Booking[] = [
     reference: "SVR-2026-1042",
     venueName: "Green Court Sports Center",
     branchName: "Cebu City Branch",
+    courtImage: "https://i0.wp.com/arkadelphian.com/wp-content/uploads/2025/09/PickleballCourt1.jpg?w=1920&ssl=1",
     sport: "Badminton",
     courtName: "Court 02",
     sessions: [

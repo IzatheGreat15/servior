@@ -1,8 +1,8 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
-import { DateRange, mockBookingRevenue, mockBranchRevenue, mockRecentBookings, mockSports, mockStats, mockUserGrowth } from "./types";
+import { useEffect, useMemo, useState } from "react";
+import { DateRange, mockBookingRevenue, mockBranchRevenue, mockSports, mockStats, mockUserGrowth } from "./types";
 import DashboardHeader from "./DashboardHeader";
 import DashboardDateFilter from "./DashboardDateFilter";
 import DashboardStats from "./DashboardStats.";
@@ -10,11 +10,14 @@ import BookingRevenueChart from "./BookingRevenueChart";
 import BranchRevenueRanking from "./BranchRevenueRanking";
 import PopularSportsChart from "./PopularSportsChart";
 import UserGrowthChart from "./UserGrowthChart";
-import RecentBookingsTable from "./RecentBookingsTable";
+import BookingsTable from "./BookingsTable";
+import { mockBookings } from "../../bookings/types";
 
 function getCurrentMonthRange(): DateRange {
   const now = new Date();
+
   const start = new Date(now.getFullYear(), now.getMonth(), 1);
+  const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
   const format = (date: Date) => {
     const year = date.getFullYear();
@@ -26,14 +29,15 @@ function getCurrentMonthRange(): DateRange {
 
   return {
     startDate: format(start),
-    endDate: format(now),
+    endDate: format(end),
   };
 }
 
 export default function AdminDashboardPage() {
-  const [dateRange, setDateRange] = useState<DateRange>(
-    getCurrentMonthRange,
-  );
+  const [dateRange, setDateRange] = useState<DateRange>({
+    startDate: '',
+    endDate: '',
+  });
 
   // Replace these mock datasets with aggregates from your data layer.
   const bookingRevenue = useMemo(
@@ -53,13 +57,19 @@ export default function AdminDashboardPage() {
 
   const recentBookings = useMemo(
     () =>
-      mockRecentBookings.filter(
-        (booking) =>
-          booking.date >= dateRange.startDate &&
-          booking.date <= dateRange.endDate,
+      mockBookings.filter((booking) =>
+        booking.sessions.some(
+          (session) =>
+            session.date >= dateRange.startDate &&
+            session.date <= dateRange.endDate,
+        ),
       ),
     [dateRange],
   );
+
+  useEffect(() => {
+    setDateRange(getCurrentMonthRange);
+  }, []);
 
   return (
     <main className="space-y-6">
@@ -85,7 +95,7 @@ export default function AdminDashboardPage() {
         <UserGrowthChart data={mockUserGrowth} />
       </div>
 
-      <RecentBookingsTable bookings={recentBookings} />
+      <BookingsTable bookings={recentBookings} />
     </main>
   );
 }

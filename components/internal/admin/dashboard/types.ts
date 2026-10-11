@@ -28,16 +28,6 @@ export type UserGrowthPoint = {
   users: number;
 };
 
-export type RecentBooking = {
-  id: string;
-  reference: string;
-  customerName: string;
-  branchName: string;
-  date: string;
-  status: "confirmed" | "pending" | "completed" | "cancelled";
-  amount: number;
-};
-
 
 export type DateRange = {
   startDate: string;
@@ -104,52 +94,3 @@ export const mockUserGrowth: UserGrowthPoint[] = [
   { month: "Sep", users: 2460 },
   { month: "Oct", users: 2843 },
 ];
-
-export const mockRecentBookings: RecentBooking[] = [
-  {
-    id: "1",
-    reference: "BK-2026-0821",
-    customerName: "Maria Santos",
-    branchName: "Greenhills",
-    date: "2026-10-11",
-    status: "confirmed",
-    amount: 1200,
-  },
-  {
-    id: "2",
-    reference: "BK-2026-0820",
-    customerName: "James Tan",
-    branchName: "Eastwood",
-    date: "2026-10-10",
-    status: "pending",
-    amount: 800,
-  },
-  {
-    id: "3",
-    reference: "BK-2026-0819",
-    customerName: "Ana Reyes",
-    branchName: "Makati",
-    date: "2026-10-09",
-    status: "completed",
-    amount: 1600,
-  },
-  {
-    id: "4",
-    reference: "BK-2026-0818",
-    customerName: "Carlo Dela Cruz",
-    branchName: "Alabang",
-    date: "2026-10-08",
-    status: "confirmed",
-    amount: 1200,
-  },
-  {
-    id: "5",
-    reference: "BK-2026-0817",
-    customerName: "Bea Lim",
-    branchName: "Cebu",
-    date: "2026-10-07",
-    status: "cancelled",
-    amount: 1400,
-  },
-];
-

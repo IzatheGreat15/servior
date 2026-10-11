@@ -6,6 +6,7 @@ import {
   LuBuilding2,
   LuMapPin,
   LuPlus,
+  LuCalendarDays,
 } from "react-icons/lu";
 
 import type { NavigationConfig } from "./types";
@@ -38,6 +39,11 @@ export const staffNavigation: NavigationConfig = {
           icon: LuPlus,
         },
       ],
+    },
+    {
+      label: "Bookings",
+      href: "/bookings",
+      icon: LuCalendarDays,
     },
   ],
 };

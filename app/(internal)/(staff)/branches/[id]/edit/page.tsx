@@ -8,6 +8,7 @@ export default function BranchEditPage() {
   return (
     <main className="min-h-screen bg-[#f4f8f5] font-sans text-[#102d29]">
       <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+        <h2 className="pb-4 text-2xl font-medium">Greenfield Sports Center</h2>
         <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(320px,0.82fr)_minmax(0,1.45fr)]">
           <BranchDetailsForm />
           <SportsCourtsPanel />

@@ -1,10 +1,5 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 /* Hide scrollbars globally while preserving scrolling */
 * {
   scrollbar-width: none; /* Firefox */
@@ -28,11 +23,4 @@
   --color-brand-background: #f7faf8;
   --color-brand-border: #e1ebe5;
   --color-brand-muted: #6b8276;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }

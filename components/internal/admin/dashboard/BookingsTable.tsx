@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LuChevronLeft,
   LuChevronRight,
@@ -40,9 +40,12 @@ const formatDate = (date: string) => {
   });
 };
 
-const formatTime = (time: string) => {
+const formatTime = (time: string, date: Date | null) => {
+  if (date === null) {
+    return;
+  }
+
   const [hours, minutes] = time.split(":").map(Number);
-  const date = new Date();
   date.setHours(hours, minutes, 0, 0);
 
   return date.toLocaleTimeString("en-PH", {
@@ -82,6 +85,12 @@ export default function BookingsTable({
   const [page, setPage] = useState(1);
   const [selectedBooking, setSelectedBooking] =
     useState<Booking | null>(null);
+  const [date, setDate] = useState<Date|null>(null);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    setDate(currentDate);
+  }, []);
 
   const branches = useMemo(
     () =>
@@ -442,8 +451,8 @@ export default function BookingsTable({
                             {formatDate(firstSession.date)}
                           </p>
                           <p className="mt-1 text-xs text-gray-500">
-                            {formatTime(firstSession.startTime)} –{" "}
-                            {formatTime(firstSession.endTime)}
+                            {formatTime(firstSession.startTime, date)} –{" "}
+                            {formatTime(firstSession.endTime, date)}
                           </p>
                           {additionalSessions > 0 && (
                             <p className="mt-1 text-xs font-medium text-[#13834e]">

@@ -1,17 +1,23 @@
-
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { DateRange, mockBookingRevenue, mockBranchRevenue, mockSports, mockStats, mockUserGrowth } from "./types";
+import {
+  DateRange,
+  mockBookingRevenue,
+  mockBranchRevenue,
+  mockSports,
+  mockStats,
+  mockUserGrowth,
+} from "./types";
 import DashboardHeader from "./DashboardHeader";
 import DashboardDateFilter from "./DashboardDateFilter";
-import DashboardStats from "./DashboardStats.";
 import BookingRevenueChart from "./BookingRevenueChart";
 import BranchRevenueRanking from "./BranchRevenueRanking";
 import PopularSportsChart from "./PopularSportsChart";
 import UserGrowthChart from "./UserGrowthChart";
 import BookingsTable from "./BookingsTable";
 import { mockBookings } from "../../bookings/types";
+import DashboardStats from "./DashboardStats.";
 
 function getCurrentMonthRange(): DateRange {
   const now = new Date();
@@ -35,22 +41,32 @@ function getCurrentMonthRange(): DateRange {
 
 export default function AdminDashboardPage() {
   const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: '',
-    endDate: '',
+    startDate: "",
+    endDate: "",
   });
 
-  // Replace these mock datasets with aggregates from your data layer.
+  useEffect(() => {
+    setDateRange(getCurrentMonthRange());
+  }, []);
+
   const bookingRevenue = useMemo(
     () =>
       mockBookingRevenue.filter((item) => {
-        const year = new Date().getFullYear();
-        const month = String(new Date().getMonth() + 1).padStart(2, "0");
+        if (!dateRange.startDate || !dateRange.endDate) return false;
+
+        const now = new Date();
         const day = item.date.match(/\d+/)?.[0]?.padStart(2, "0");
 
         if (!day) return false;
 
-        const isoDate = `${year}-${month}-${day}`;
-        return isoDate >= dateRange.startDate && isoDate <= dateRange.endDate;
+        const isoDate = `${now.getFullYear()}-${String(
+          now.getMonth() + 1,
+        ).padStart(2, "0")}-${day}`;
+
+        return (
+          isoDate >= dateRange.startDate &&
+          isoDate <= dateRange.endDate
+        );
       }),
     [dateRange],
   );
@@ -60,16 +76,14 @@ export default function AdminDashboardPage() {
       mockBookings.filter((booking) =>
         booking.sessions.some(
           (session) =>
+            dateRange.startDate &&
+            dateRange.endDate &&
             session.date >= dateRange.startDate &&
             session.date <= dateRange.endDate,
         ),
       ),
     [dateRange],
   );
-
-  useEffect(() => {
-    setDateRange(getCurrentMonthRange);
-  }, []);
 
   return (
     <main className="space-y-6">

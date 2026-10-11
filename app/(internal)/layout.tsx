@@ -14,7 +14,7 @@ export default function InternalRouteLayout({
     console.log(staffNavigation);
   });
   return (
-    <InternalLayout navigationItems={memberNavigation.items}>
+    <InternalLayout navigationItems={staffNavigation.items}>
       {children}
     </InternalLayout>
   );

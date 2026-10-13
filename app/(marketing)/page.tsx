@@ -118,7 +118,9 @@ export default function HomePage() {
 
                             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                                 <a
-                                    href="/register"
+                                    // href="/register"
+                                    href="https://forms.gle/W9A2EB2qtZNM5RVB9"
+                                    target="_blank"
                                     className="rounded-xl bg-green-600 px-6 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-green-600/20 transition hover:bg-green-700"
                                 >
                                     Join the Waitlist
@@ -810,7 +812,9 @@ export default function HomePage() {
 
                         <div className="mt-8">
                             <a
-                                href="/register"
+                                // href="/register"
+                                href="https://forms.gle/W9A2EB2qtZNM5RVB9"
+                                target="_blank"
                                 className="inline-flex rounded-xl bg-white px-6 py-3.5 text-sm font-bold text-green-700 shadow-lg transition hover:bg-green-50"
                             >
                                 Join the Waitlist

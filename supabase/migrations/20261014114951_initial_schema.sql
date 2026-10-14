@@ -44,6 +44,7 @@ CREATE TABLE "public"."branches" (
   "created_at"      timestamp with time zone NOT NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
   "updated_at"      timestamp with time zone NOT NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
   "branch_location" json                     NOT NULL,
+  "layout_image"    text,
   CONSTRAINT "branches_pkey" PRIMARY KEY (id)
 );
 
@@ -82,7 +83,7 @@ CREATE TABLE "public"."inventory_items" (
   "item_name"   text                     NOT NULL,
   "price"       real,
   "quantity"    bigint                   NOT NULL DEFAULT '0'::bigint,
-  "image"       text,
+  "item_image"  text,
   "is_listed"   boolean                  NOT NULL DEFAULT true,
   "created_at"  timestamp with time zone NOT NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
   "updated_at"  timestamp with time zone NOT NULL DEFAULT (now() AT TIME ZONE 'utc'::text),

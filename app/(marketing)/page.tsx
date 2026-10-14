@@ -52,7 +52,7 @@ export default function HomePage() {
                         <source src="https://www.pexels.com/download/video/17290112/" type="video/mp4" />
                     </video>
 
-                    <div className="absolute inset-0 -z-10 bg-[#102d29]/80" />
+                    <div className="absolute inset-0 -z-10 bg-[#102d29]/80" /> 
 
                 {/* Navigation */}
                 <nav className="relative">

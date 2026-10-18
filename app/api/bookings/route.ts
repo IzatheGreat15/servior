@@ -130,8 +130,8 @@ function isValidRequest(value: unknown): value is BookingRequest {
       isRecord(slot) &&
       isPositiveInteger(slot.courtId) &&
       Number.isInteger(slot.startHour) &&
-      Number(slot.startHour) >= 6 &&
-      Number(slot.startHour) < 21,
+      Number(slot.startHour) >= 0 &&
+      Number(slot.startHour) < 23,
   );
 }
 

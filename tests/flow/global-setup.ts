@@ -74,13 +74,21 @@ export default async function globalSetup() {
     );
     if (!branch.rowCount) {
       branch = await client.query<{ id: string }>(
-        `INSERT INTO public.branches (tenant_id, branch_name, branch_location)
-         VALUES ($1, $2, '{}'::json)
+        `INSERT INTO public.branches
+          (tenant_id, branch_name, branch_location, opening_time, closing_time)
+         VALUES ($1, $2, '{}'::json, '06:00', '22:00')
          RETURNING id`,
         [tenantId, TEST_BRANCH_NAME],
       );
     }
     const branchId = branch.rows[0].id;
+
+    await client.query(
+      `UPDATE public.branches
+       SET opening_time = '06:00', closing_time = '22:00'
+       WHERE id = $1`,
+      [branchId],
+    );
 
     for (const courtName of ["Court 1", "Court 2"]) {
       const existingCourt = await client.query(
@@ -93,15 +101,15 @@ export default async function globalSetup() {
       if (existingCourt.rowCount) {
         await client.query(
           `UPDATE public.courts
-           SET sport_id = $1, price = 400, opening_time = '06:00', closing_time = '22:00'
+           SET sport_id = $1, price = 400
            WHERE id = $2`,
           [sportId, existingCourt.rows[0].id],
         );
       } else {
         await client.query(
           `INSERT INTO public.courts
-            (branch_id, court_name, price, sport_id, opening_time, closing_time)
-           VALUES ($1, $2, 400, $3, '06:00', '22:00')`,
+            (branch_id, court_name, price, sport_id)
+           VALUES ($1, $2, 400, $3)`,
           [branchId, courtName, sportId],
         );
       }

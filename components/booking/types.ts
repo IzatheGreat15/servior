@@ -19,8 +19,8 @@ export const COURTS: Court[] = [
   { id: "court-6", name: "Court 6" },
 ];
 
-export const START_HOUR = 6;
-export const END_HOUR = 21;
+export const START_HOUR = 0;
+export const END_HOUR = 23;
 
 export function formatHour(hour: number) {
   const suffix = hour >= 12 ? "PM" : "AM";

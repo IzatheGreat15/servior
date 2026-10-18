@@ -2,7 +2,6 @@ import { PiCourtBasketballBold } from "react-icons/pi";
 import CustomSelect from "./CustomSelect";
 import { CgTennis } from "react-icons/cg";
 import { FaRegCalendar } from "react-icons/fa";
-import { useEffect, useState } from "react";
 
 type Props = {
   branch: string;
@@ -10,6 +9,7 @@ type Props = {
   sport: string;
   setSport: (value: string) => void;
   date: string;
+  today: string;
   setDate: (value: string) => void;
   branches: string[];
   sports: string[];
@@ -22,22 +22,12 @@ export default function BookingFilters({
   sport,
   setSport,
   date,
+  today,
   setDate,
   branches,
   sports,
   onDateStep,
 }: Props) {
-  const [today, setToday] = useState("");
-
-  useEffect(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-
-    setToday(`${year}-${month}-${day}`);
-  }, []);
-
   return (
     <section
       className="grid grid-cols-1 gap-4 rounded-[18px] p-4 sm:grid-cols-2 sm:px-5 sm:py-2 lg:grid-cols-3"

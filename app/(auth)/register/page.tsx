@@ -1,7 +1,62 @@
 
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+
+    const formData = new FormData(event.currentTarget);
+    if (formData.get("password") !== formData.get("confirmPassword")) {
+      setErrorMessage("The passwords do not match.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          password: formData.get("password"),
+        }),
+      });
+
+      if (!response.ok) {
+        setErrorMessage(
+          response.status === 400
+            ? "Please check your details and try again."
+            : "Account registration is temporarily unavailable.",
+        );
+        return;
+      }
+
+      const result = (await response.json()) as { confirmationRequired: boolean };
+      if (result.confirmationRequired) {
+        setSuccessMessage("Check your email to confirm your account.");
+      } else {
+        router.replace("/dashboard");
+        router.refresh();
+      }
+    } catch {
+      setErrorMessage("Account registration is temporarily unavailable.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="mb-7 text-center">
@@ -13,7 +68,7 @@ export default function RegisterPage() {
         </p>
       </div>
 
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={submit}>
         <div>
           <label
             htmlFor="name"
@@ -118,11 +173,18 @@ export default function RegisterPage() {
           </label>
         </div>
 
+        {(errorMessage || successMessage) && (
+          <p role={errorMessage ? "alert" : "status"} className={`text-sm ${errorMessage ? "text-red-600" : "text-green-700"}`}>
+            {errorMessage || successMessage}
+          </p>
+        )}
+
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
+          disabled={isSubmitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
         >
-          Create account
+          {isSubmitting ? "Creating account..." : "Create account"}
         </button>
       </form>
 

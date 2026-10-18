@@ -1,20 +1,18 @@
 "use client"
 
-import { useState } from "react";
-import { cardClass } from "./types";
+import { BranchDetails, cardClass } from "./types";
 import SectionHeading from "./SectionHeading";
 import Field from "./Field";
 import { IoMdInformationCircle } from "react-icons/io";
 
 
-export default function BranchDetailsForm() {
-  const [name, setName] = useState("Greenfield Sports Center");
-  const [address, setAddress] = useState("123 Greenfield Avenue, Cebu City");
-  const [phone, setPhone] = useState("+63 917 123 4567");
-  const [email, setEmail] = useState("greenfield@example.com");
-  const [opening, setOpening] = useState("06:00");
-  const [closing, setClosing] = useState("22:00");
-
+export default function BranchDetailsForm({
+  value,
+  onChange,
+}: {
+  value: BranchDetails;
+  onChange: (value: BranchDetails) => void;
+}) {
   return (
     <div className="space-y-5">
       <section className={`${cardClass} p-5 sm:p-6`}>
@@ -28,29 +26,29 @@ export default function BranchDetailsForm() {
         <div className="space-y-4">
           <Field
             label="Branch name"
-            value={name}
-            onChange={setName}
+            value={value.name}
+            onChange={(name) => onChange({ ...value, name })}
             placeholder="e.g. Greenfield Sports Center"
           />
 
           <Field
             label="Address"
-            value={address}
-            onChange={setAddress}
+            value={value.address}
+            onChange={(address) => onChange({ ...value, address })}
             placeholder="Street, city, province"
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <Field
               label="Contact number"
-              value={phone}
-              onChange={setPhone}
+              value={value.phone}
+              onChange={(phone) => onChange({ ...value, phone })}
               placeholder="+63..."
             />
             <Field
               label="Contact email"
-              value={email}
-              onChange={setEmail}
+              value={value.email}
+              onChange={(email) => onChange({ ...value, email })}
               type="email"
               placeholder="branch@example.com"
             />
@@ -67,14 +65,14 @@ export default function BranchDetailsForm() {
         <div className="mt-5 grid grid-cols-2 gap-4">
           <Field
             label="Opening time"
-            value={opening}
-            onChange={setOpening}
+            value={value.openingTime}
+            onChange={(openingTime) => onChange({ ...value, openingTime })}
             type="time"
           />
           <Field
             label="Closing time"
-            value={closing}
-            onChange={setClosing}
+            value={value.closingTime}
+            onChange={(closingTime) => onChange({ ...value, closingTime })}
             type="time"
           />
         </div>
@@ -84,7 +82,7 @@ export default function BranchDetailsForm() {
             <IoMdInformationCircle />
           </span>
           <p>
-            These are the branch's default hours. You can configure individual
+            These are the branch&apos;s default hours. You can configure individual
             court availability and pricing rules separately.
           </p>
         </div>

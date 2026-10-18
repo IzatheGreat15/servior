@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import {
+  BookingRevenuePoint,
+  BranchRevenue,
   DateRange,
-  mockBookingRevenue,
-  mockBranchRevenue,
-  mockSports,
-  mockStats,
-  mockUserGrowth,
+  DashboardStatsData,
+  SportUsage,
+  UserGrowthPoint,
 } from "./types";
 import DashboardHeader from "./DashboardHeader";
 import DashboardDateFilter from "./DashboardDateFilter";
@@ -16,8 +16,27 @@ import BranchRevenueRanking from "./BranchRevenueRanking";
 import PopularSportsChart from "./PopularSportsChart";
 import UserGrowthChart from "./UserGrowthChart";
 import BookingsTable from "./BookingsTable";
-import { mockBookings } from "../../bookings/types";
+import type { Booking } from "../../bookings/types";
 import DashboardStats from "./DashboardStats.";
+
+type DashboardResponse = {
+  stats: DashboardStatsData;
+  bookingRevenue: BookingRevenuePoint[];
+  branchRevenue: BranchRevenue[];
+  sports: SportUsage[];
+  userGrowth: UserGrowthPoint[];
+  recentBookings: Booking[];
+};
+
+const emptyStats: DashboardStatsData = {
+  newUsers: 0,
+  totalUsers: 0,
+  totalBookings: 0,
+  revenue: 0,
+  newUsersChange: 0,
+  bookingsChange: 0,
+  revenueChange: 0,
+};
 
 function getCurrentMonthRange(): DateRange {
   const now = new Date();
@@ -44,46 +63,58 @@ export default function AdminDashboardPage() {
     startDate: "",
     endDate: "",
   });
+  const [dashboard, setDashboard] = useState<DashboardResponse>({
+    stats: emptyStats,
+    bookingRevenue: [],
+    branchRevenue: [],
+    sports: [],
+    userGrowth: [],
+    recentBookings: [],
+  });
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     setDateRange(getCurrentMonthRange());
   }, []);
 
-  const bookingRevenue = useMemo(
-    () =>
-      mockBookingRevenue.filter((item) => {
-        if (!dateRange.startDate || !dateRange.endDate) return false;
+  useEffect(() => {
+    if (!dateRange.startDate || !dateRange.endDate) {
+      return;
+    }
 
-        const now = new Date();
-        const day = item.date.match(/\d+/)?.[0]?.padStart(2, "0");
+    const controller = new AbortController();
 
-        if (!day) return false;
+    async function loadDashboard() {
+      try {
+        const params = new URLSearchParams({
+          from: dateRange.startDate,
+          to: dateRange.endDate,
+        });
+        const response = await fetch(`/api/dashboard?${params}`, {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          setErrorMessage(
+            response.status === 401 || response.status === 403
+              ? "Sign in with staff access to view dashboard data."
+              : "Dashboard data could not be loaded.",
+          );
+          return;
+        }
 
-        const isoDate = `${now.getFullYear()}-${String(
-          now.getMonth() + 1,
-        ).padStart(2, "0")}-${day}`;
+        const result = (await response.json()) as DashboardResponse;
+        setDashboard(result);
+        setErrorMessage("");
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setErrorMessage("Dashboard data could not be loaded.");
+      }
+    }
 
-        return (
-          isoDate >= dateRange.startDate &&
-          isoDate <= dateRange.endDate
-        );
-      }),
-    [dateRange],
-  );
-
-  const recentBookings = useMemo(
-    () =>
-      mockBookings.filter((booking) =>
-        booking.sessions.some(
-          (session) =>
-            dateRange.startDate &&
-            dateRange.endDate &&
-            session.date >= dateRange.startDate &&
-            session.date <= dateRange.endDate,
-        ),
-      ),
-    [dateRange],
-  );
+    void loadDashboard();
+    return () => controller.abort();
+  }, [dateRange]);
 
   return (
     <main className="space-y-6">
@@ -97,19 +128,21 @@ export default function AdminDashboardPage() {
         onApply={setDateRange}
       />
 
-      <DashboardStats stats={mockStats} />
+      {errorMessage && <p role="alert" className="text-sm text-red-600">{errorMessage}</p>}
+
+      <DashboardStats stats={dashboard.stats} />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <BookingRevenueChart data={bookingRevenue} />
-        <BranchRevenueRanking data={mockBranchRevenue} />
+        <BookingRevenueChart data={dashboard.bookingRevenue} />
+        <BranchRevenueRanking data={dashboard.branchRevenue} />
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <PopularSportsChart data={mockSports} />
-        <UserGrowthChart data={mockUserGrowth} />
+        <PopularSportsChart data={dashboard.sports} />
+        <UserGrowthChart data={dashboard.userGrowth} />
       </div>
 
-      <BookingsTable bookings={recentBookings} />
+      <BookingsTable bookings={dashboard.recentBookings} />
     </main>
   );
 }

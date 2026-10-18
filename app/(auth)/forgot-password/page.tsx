@@ -1,7 +1,37 @@
 
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 export default function ForgotPasswordPage() {
+  const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setMessage("");
+    setIsSubmitting(true);
+
+    const formData = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/password-reset-requests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: formData.get("email") }),
+      });
+      if (!response.ok) {
+        setMessage("A reset link could not be sent. Please try again later.");
+        return;
+      }
+      setMessage("If an account exists for that email, a reset link will be sent.");
+    } catch {
+      setMessage("A reset link could not be sent. Please try again later.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
     <div className="w-full">
       <div className="mb-7 text-center">
@@ -32,7 +62,7 @@ export default function ForgotPasswordPage() {
         </p>
       </div>
 
-      <form action="#" className="space-y-5">
+      <form className="space-y-5" onSubmit={submit}>
         <div>
           <label
             htmlFor="email"
@@ -52,11 +82,14 @@ export default function ForgotPasswordPage() {
           />
         </div>
 
+        {message && <p role="status" className="text-sm text-gray-600">{message}</p>}
+
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
+          disabled={isSubmitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
         >
-          Send reset link
+          {isSubmitting ? "Sending..." : "Send reset link"}
         </button>
       </form>
 

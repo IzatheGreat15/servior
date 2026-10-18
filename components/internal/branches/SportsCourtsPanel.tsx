@@ -5,7 +5,8 @@ import { Court, DAYS, SportGroupData } from "./types";
 import SportGroup from "./SportGroup";
 import CourtModal from "./CourtModal";
 
-const initialSports: SportGroupData[] = [
+export function createInitialSports(): SportGroupData[] {
+  return [
   {
     id: "basketball",
     name: "Basketball",
@@ -64,10 +65,16 @@ const initialSports: SportGroupData[] = [
       },
     ],
   },
-];
+  ];
+}
 
-export default function SportsCourtsPanel() {
-  const [sports, setSports] = useState(initialSports);
+export default function SportsCourtsPanel({
+  sports,
+  onChange,
+}: {
+  sports: SportGroupData[];
+  onChange: (sports: SportGroupData[]) => void;
+}) {
   const [modal, setModal] = useState<{
     sportId: string;
     court: Court | null;
@@ -78,8 +85,8 @@ export default function SportsCourtsPanel() {
   function saveCourt(updatedCourt: Court) {
     if (!modal) return;
 
-    setSports((current) =>
-      current.map((sport) => {
+    onChange(
+      sports.map((sport) => {
         if (sport.id !== modal.sportId) return sport;
 
         const exists = sport.courts.some(
@@ -94,19 +101,19 @@ export default function SportsCourtsPanel() {
               )
             : [...sport.courts, updatedCourt],
         };
-      })
+      }),
     );
 
     setModal(null);
   }
 
   function handleSportNameChange(sportId: string, name: string) {
-    setSports((current) =>
-      current.map((sport) =>
+    onChange(
+      sports.map((sport) =>
         sport.id === sportId
           ? { ...sport, name }
           : sport
-      )
+      ),
     );
   }
 
@@ -119,7 +126,7 @@ export default function SportsCourtsPanel() {
               Sports & Courts
             </h2>
             <p className="mt-1 text-sm leading-6 text-slate-500">
-              Organize this branch's sports and manage each court's pricing.
+              Organize this branch&apos;s sports and manage each court&apos;s pricing.
             </p>
           </div>
           <span className="rounded-full bg-[#e8f5ec] px-3 py-1.5 text-xs font-bold text-[#13834e]">
@@ -144,8 +151,8 @@ export default function SportsCourtsPanel() {
         <button
           type="button"
           onClick={() =>
-            setSports((current) => [
-              ...current,
+            onChange([
+              ...sports,
               {
                 id: crypto.randomUUID(),
                 name: "",

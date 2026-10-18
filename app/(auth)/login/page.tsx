@@ -2,10 +2,48 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { LuArrowRight, LuEye, LuEyeOff, LuLockKeyhole, LuMail } from "react-icons/lu";
+import { useRouter } from "next/navigation";
+import { LuEye, LuEyeOff, LuLockKeyhole, LuMail } from "react-icons/lu";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  async function submit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    setErrorMessage("");
+    setIsSubmitting(true);
+
+    const formData = new FormData(event.currentTarget);
+    try {
+      const response = await fetch("/api/sessions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.get("email"),
+          password: formData.get("password"),
+        }),
+      });
+
+      if (!response.ok) {
+        setErrorMessage(
+          response.status === 401
+            ? "Email or password is incorrect."
+            : "Sign in is temporarily unavailable. Please try again.",
+        );
+        return;
+      }
+
+      router.replace("/dashboard");
+      router.refresh();
+    } catch {
+      setErrorMessage("Sign in is temporarily unavailable. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <>
@@ -18,13 +56,7 @@ export default function LoginPage() {
         </p>
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          // TODO: Connect to Supabase Auth.
-        }}
-        className="space-y-5"
-      >
+      <form onSubmit={submit} className="space-y-5">
         <div>
           <label htmlFor="email" className="mb-2 block text-sm font-medium text-gray-700">
             Email address
@@ -84,16 +116,19 @@ export default function LoginPage() {
           Remember me
         </label>
 
+        {errorMessage && <p role="alert" className="text-sm text-red-600">{errorMessage}</p>}
+
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark"
+          disabled={isSubmitting}
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-4 py-3.5 text-sm font-semibold text-white transition hover:bg-brand-dark disabled:opacity-60"
         >
-          Sign in
+          {isSubmitting ? "Signing in..." : "Sign in"}
         </button>
       </form>
 
       <p className="mt-7 text-center text-sm text-gray-500">
-        Don't have an account?{" "}
+        Don&apos;t have an account?{" "}
         <Link href="/register" className="font-semibold text-brand hover:text-brand-dark">
           Create account
         </Link>

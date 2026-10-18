@@ -1,21 +1,24 @@
 import { Fragment } from "react";
 import { PiCourtBasketball } from "react-icons/pi";
 import {
-  COURTS,
   END_HOUR,
   START_HOUR,
-  UNAVAILABLE,
   formatHour,
 } from "./types";
+import type { BookingCourt, UnavailableSlot } from "@/lib/booking/options";
 import type { BookingSelection } from "./types";
 
 type Props = {
   selected: BookingSelection[];
+  courts: BookingCourt[];
+  unavailableSlots: UnavailableSlot[];
   onToggle: (courtId: string, hour: number) => void;
 };
 
 export default function AvailabilityCalendar({
   selected,
+  courts,
+  unavailableSlots,
   onToggle,
 }: Props) {
   const hours = Array.from(
@@ -38,14 +41,14 @@ export default function AvailabilityCalendar({
         <div
           className="grid min-w-[700px] gap-[3px]"
           style={{
-            gridTemplateColumns: `76px repeat(${COURTS.length}, minmax(92px, 1fr))`,
+            gridTemplateColumns: `76px repeat(${courts.length}, minmax(92px, 1fr))`,
           }}
         >
           <div className="flex min-h-[49px] items-center justify-start border-b border-[#eaf1ec] pl-2 text-[10px] font-extrabold text-[#405d55]">
             Time
           </div>
 
-          {COURTS.map((court) => (
+          {courts.map((court) => (
             <div
               key={court.id}
               className="flex min-h-[49px] flex-col items-center justify-center gap-[3px] border-b border-[#eaf1ec] text-[10px] font-extrabold text-[#405d55]"
@@ -67,10 +70,10 @@ export default function AvailabilityCalendar({
                 {formatHour(hour)}
               </div>
 
-              {COURTS.map((court) => {
-                const unavailable = (
-                  UNAVAILABLE[court.id] ?? []
-                ).includes(hour);
+              {courts.map((court) => {
+                const unavailable = unavailableSlots.some(
+                  (slot) => slot.courtId === court.id && slot.startHour === hour
+                );
 
                 const active = isSelected(court.id, hour);
 
@@ -89,7 +92,7 @@ export default function AvailabilityCalendar({
                     }`}
                     title={
                       unavailable
-                        ? "Already booked"
+                        ? "Unavailable"
                         : active
                           ? "Click to deselect this hour"
                           : "Select this hour"
@@ -106,7 +109,7 @@ export default function AvailabilityCalendar({
                     {unavailable ? (
                       <>
                         <span className="text-[11px] font-semibold text-white">
-                          Booked
+                        Unavailable
                         </span>
                         <span className="absolute top-1 right-[7px] text-[8px] text-white/70">
                           ●

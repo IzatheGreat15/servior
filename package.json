@@ -6,9 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:ui": "npm run test:ui:page:all && npm run test:ui:flow && npm run test:ui:error",
+    "test:ui:page": "vitest run",
+    "test:ui:page:all": "vitest run tests/page",
+    "test:ui:flow": "npm run build && playwright test --config playwright.config.ts",
+    "test:ui:error": "npm run build && playwright test --config playwright.errors.config.ts",
+    "test:e2e": "npm run test:ui:flow",
+    "test:e2e:headed": "npm run build && playwright test --config playwright.config.ts --headed",
+    "test:e2e:install": "playwright install chromium"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "2.105.0",
     "next": "16.4.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
@@ -16,15 +26,24 @@
     "recharts": "^3.10.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
     "@tailwindcss/turbopack": "^4",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
     "@types/node": "^20",
+    "@types/pg": "^8.15.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitejs/plugin-react": "^4.7.0",
     "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.0",
+    "jsdom": "^26.1.0",
+    "pg": "^8.16.3",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.2.4"
   },
   "packageManager": "pnpm@12.4.1"
 }

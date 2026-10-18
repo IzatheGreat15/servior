@@ -26,6 +26,7 @@ export type OnboardingStatus =
   | "identity"
   | "pending"
   | "success"
+  | "failed"
   | "redirecting";
 
 export const initialOnboardingData: OnboardingData = {

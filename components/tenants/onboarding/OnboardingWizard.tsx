@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import OnboardingProgress from "./OnboardingProgress";
@@ -32,6 +32,8 @@ export default function OnboardingWizard() {
   const [selectedPlanId, setSelectedPlanId] = useState("starter");
   const [status, setStatus] =
     useState<OnboardingStatus>("form");
+  const [verificationUrl, setVerificationUrl] = useState<string>('');
+  const [tenantId, setTenantId] = useState<number | null>(null);
 
   const selectedPlan =
     mockPlans.find((plan) => plan.id === selectedPlanId) ??
@@ -52,23 +54,146 @@ export default function OnboardingWizard() {
     }, 1200);
   }
 
+
   async function createMerchant() {
     setStatus("creating");
 
-    // Demo only. Replace with a server-side API call.
-    await new Promise((resolve) => setTimeout(resolve, 1800));
+    try {
+      const response = await fetch("/api/payments/onboarding", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          business: {
+            facilityName: data.facilityName,
+            legalBusinessName: data.legalBusinessName,
+            businessEmail: data.businessEmail,
+            businessPhone: data.businessPhone,
+            businessAddress: data.businessAddress,
+          },
+          owner: {
+            firstName: data.ownerFirstName,
+            lastName: data.ownerLastName,
+            email: data.ownerEmail,
+            phone: data.ownerPhone,
+          },
+          planId: selectedPlan.id,
+        }),
+      });
 
-    setStatus("identity");
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          result.error ?? "Failed to create merchant."
+        );
+      }
+
+      console.log("Onboarding created:", result);
+
+      setTenantId(Number(result.tenantId));
+      setVerificationUrl(result.verificationUrl);
+      setStatus("identity");
+    } catch (error) {
+      console.error("Merchant creation failed:", error);
+
+      alert(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
+
+      setStatus("form");
+    }
   }
+
 
   function simulatePayMongoReturn() {
-    // Demo only. A real integration must verify status server-side.
     setStatus("pending");
 
-    setTimeout(() => {
-      setStatus("success");
-    }, 1800);
+    window.open(
+      verificationUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
   }
+
+  async function handleTryAgain() {
+    try {
+      const response = await fetch("/api/payments/onboarding/reset", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ tenantId }),
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        throw new Error(result.error || "Failed to reset onboarding");
+      }
+
+      setStatus("identity");
+    } catch (error) {
+      console.error("Failed to reset onboarding:", error);
+      // Display an error message to the user here.
+    }
+  }
+
+  useEffect(() => {
+    console.log(status, tenantId);
+    if (status !== "pending" || tenantId === null) {
+      return;
+    }
+
+    let cancelled = false;
+
+    async function checkOnboardingStatus() {
+      try {
+        const response = await fetch(
+          `/api/payments/onboarding/status?tenantId=${tenantId}`,
+          { cache: "no-store" }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = await response.json();
+
+        if (cancelled) return;
+
+        switch (result.onboardingStatus) {
+          case true:
+            setStatus("success");
+            break;
+
+          case false:
+            setStatus("failed");
+            break;
+
+          case "pending":
+          default:
+            // Keep waiting for the webhook to update the status.
+            break;
+        }
+      } catch (error) {
+        console.error("Failed to check onboarding status:", error);
+      }
+    }
+
+    void checkOnboardingStatus();
+
+    const intervalId = window.setInterval(() => {
+      void checkOnboardingStatus();
+    }, 3000);
+
+    return () => {
+      cancelled = true;
+      window.clearInterval(intervalId);
+    };
+  }, [status, tenantId]);
 
   const formStep = status === "form";
 
@@ -167,6 +292,27 @@ export default function OnboardingWizard() {
                 </p>
               </div>
             </aside>
+          </div>
+        )}
+
+        {status === "failed" && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-6">
+            <h2 className="text-xl font-bold text-red-800">
+              Verification unsuccessful
+            </h2>
+
+            <p className="mt-2 text-sm text-red-700">
+              We couldn't verify your identity. Please review your details
+              and follow the instructions provided by PayMongo.
+            </p>
+
+            <button
+              type="button"
+              onClick={handleTryAgain}
+              className="mt-4 rounded-lg bg-emerald-600 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-700"
+            >
+              Try again
+            </button>
           </div>
         )}
 

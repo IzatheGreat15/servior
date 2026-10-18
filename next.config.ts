@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  allowedDevOrigins: ["tartness-padlock-cornball.ngrok-free.dev"],
 };
 
 export default nextConfig;

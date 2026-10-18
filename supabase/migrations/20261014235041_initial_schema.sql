@@ -118,7 +118,7 @@ CREATE TABLE "public"."tenants" (
   "updated_at"          timestamp with time zone NOT NULL DEFAULT (now() AT TIME ZONE 'utc'::text),
   "paymongo_merchant_id" text,
   "paymongo_customer_id"    text,
-  "onboarding_status"   boolean                  NOT NULL DEFAULT false,
+  "onboarding_status"   boolean                  NULL DEFAULT NULL,
   "payout_status"       boolean                  NOT NULL DEFAULT false,
   "contact_number"      text,
   "email"               text,

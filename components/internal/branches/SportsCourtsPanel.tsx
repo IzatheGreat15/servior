@@ -90,8 +90,8 @@ export default function SportsCourtsPanel() {
           ...sport,
           courts: exists
             ? sport.courts.map((court) =>
-                court.id === updatedCourt.id ? updatedCourt : court
-              )
+              court.id === updatedCourt.id ? updatedCourt : court
+            )
             : [...sport.courts, updatedCourt],
         };
       })
@@ -110,6 +110,12 @@ export default function SportsCourtsPanel() {
     );
   }
 
+  const handleRemoveSport = (sportId: string) => {
+    setSports((previous) =>
+      previous.filter((sport) => sport.id !== sportId)
+    );
+  };
+
   return (
     <>
       <div className="space-y-5">
@@ -127,19 +133,23 @@ export default function SportsCourtsPanel() {
           </span>
         </div>
 
-        {sports.map((sport) => (
-          <SportGroup
-            key={sport.id}
-            sport={sport}
-            onAddCourt={(sportId) =>
-              setModal({ sportId, court: null })
-            }
-            onEditCourt={(sportId, court) =>
-              setModal({ sportId, court })
-            }
-            onSportNameChange={handleSportNameChange}
-          />
-        ))}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+          {sports.map((sport) => (
+            <SportGroup
+              key={sport.id}
+              sport={sport}
+              onAddCourt={(sportId) =>
+                setModal({ sportId, court: null })
+              }
+              onEditCourt={(sportId, court) =>
+                setModal({ sportId, court })
+              }
+              onSportNameChange={handleSportNameChange}
+              onRemoveSport={handleRemoveSport}
+            />
+          ))}
+        </div>
+
 
         <button
           type="button"

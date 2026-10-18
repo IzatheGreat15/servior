@@ -6,6 +6,7 @@ import SportsCourtsPanel from "@/components/internal/branches/sports-and-courts/
 import BranchEditTabs, { BranchTab } from "@/components/internal/branches/BranchEditTabs";
 import BranchSettingsPanel from "@/components/internal/branches/BranchSettingsPanel";
 import ProductsPanel from "@/components/internal/branches/products/ProductsPanel";
+import StaffPanel from "@/components/internal/branches/staff/StaffPanel";
 
 export default function BranchEditPage() {
   const [activeTab, setActiveTab] = useState<BranchTab>("general");
@@ -36,16 +37,7 @@ export default function BranchEditPage() {
 
         {activeTab === "sports" && <SportsCourtsPanel />}
         {activeTab === "products" && <ProductsPanel />}
-        {activeTab === "staff" && (
-          <section className="rounded-2xl border border-[#d8e2dc] bg-white p-6 shadow-[0_4px_20px_rgba(16,45,41,0.035)]">
-            <h2 className="text-lg font-bold">Branch staff</h2>
-            <p className="mt-1 text-sm text-slate-500">Manage which team members can access this branch.</p>
-            <div className="mt-5 rounded-xl border border-dashed border-[#b8d7c4] bg-[#fbfdfb] p-10 text-center">
-              <p className="font-semibold text-[#29483e]">Staff management component not added yet</p>
-              <p className="mt-1 text-sm text-slate-500">This tab is ready for a reusable BranchStaffPanel component.</p>
-            </div>
-          </section>
-        )}
+        {activeTab === "staff" && <StaffPanel />}
         {activeTab === "settings" && <BranchSettingsPanel />}        
       </div>
     </main>

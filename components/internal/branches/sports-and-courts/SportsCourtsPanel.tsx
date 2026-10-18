@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Court, DAYS, SportGroupData } from "./types";
+import { Court, DAYS, SportGroupData } from "../types";
 import SportGroup from "./SportGroup";
 import CourtModal from "./CourtModal";
 

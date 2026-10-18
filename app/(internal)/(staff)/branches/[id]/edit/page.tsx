@@ -2,9 +2,10 @@
 
 import { useState } from "react";
 import BranchDetailsForm from "@/components/internal/branches/BranchDetailForm";
-import SportsCourtsPanel from "@/components/internal/branches/SportsCourtsPanel";
+import SportsCourtsPanel from "@/components/internal/branches/sports-and-courts/SportsCourtsPanel";
 import BranchEditTabs, { BranchTab } from "@/components/internal/branches/BranchEditTabs";
 import BranchSettingsPanel from "@/components/internal/branches/BranchSettingsPanel";
+import ProductsPanel from "@/components/internal/branches/products/ProductsPanel";
 
 export default function BranchEditPage() {
   const [activeTab, setActiveTab] = useState<BranchTab>("general");
@@ -34,16 +35,7 @@ export default function BranchEditPage() {
         )}
 
         {activeTab === "sports" && <SportsCourtsPanel />}
-        {activeTab === "products" && (
-          <section className="rounded-2xl border border-[#d8e2dc] bg-white p-6 shadow-[0_4px_20px_rgba(16,45,41,0.035)]">
-            <h2 className="text-lg font-bold">Products</h2>
-            <p className="mt-1 text-sm text-slate-500">Manage rentals and items for sale, with pricing and quantities specific to this branch.</p>
-            <div className="mt-5 rounded-xl border border-dashed border-[#b8d7c4] bg-[#fbfdfb] p-10 text-center">
-              <p className="font-semibold text-[#29483e]">Product management component not added yet</p>
-              <p className="mt-1 text-sm text-slate-500">This tab is ready for a reusable ProductsPanel component.</p>
-            </div>
-          </section>
-        )}
+        {activeTab === "products" && <ProductsPanel />}
         {activeTab === "staff" && (
           <section className="rounded-2xl border border-[#d8e2dc] bg-white p-6 shadow-[0_4px_20px_rgba(16,45,41,0.035)]">
             <h2 className="text-lg font-bold">Branch staff</h2>
@@ -54,12 +46,7 @@ export default function BranchEditPage() {
             </div>
           </section>
         )}
-        {activeTab === "settings" && <BranchSettingsPanel />}
-
-        <footer className="mt-8 flex items-center justify-end gap-2">
-          <button type="button" onClick={() => window.history.back()} className="rounded-xl border border-[#d8e2dc] px-5 py-3 text-sm font-bold text-[#29483e] hover:bg-slate-50">Cancel</button>
-          <button type="button" onClick={() => window.alert("UI prototype only. Connect this button to your save action.")} className="rounded-xl bg-[#13834e] px-5 py-3 text-sm font-bold text-white hover:bg-[#0f6d40]">Save changes</button>
-        </footer>
+        {activeTab === "settings" && <BranchSettingsPanel />}        
       </div>
     </main>
   );

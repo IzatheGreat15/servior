@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Court, DAYS, PricingRule } from "./types";
-import Field from "./Field";
+import { Court, DAYS, PricingRule } from "../types";
+import Field from "../Field";
 import PricingRuleEditor from "./PricingRuleEditor";
 
 export default function CourtModal({

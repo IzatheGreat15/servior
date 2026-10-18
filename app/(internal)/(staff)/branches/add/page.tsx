@@ -2,7 +2,7 @@
 "use client"
 
 import BranchDetailsForm from "@/components/internal/branches/BranchDetailForm";
-import SportsCourtsPanel from "@/components/internal/branches/SportsCourtsPanel";
+import SportsCourtsPanel from "@/components/internal/branches/sports-and-courts/SportsCourtsPanel";
 
 export default function BranchAddPage() {
   return (

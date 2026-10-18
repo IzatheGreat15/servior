@@ -4,7 +4,7 @@
 import { CgTennis } from "react-icons/cg";
 import { IoTrashOutline } from "react-icons/io5";
 import CourtCard from "./CourtCard";
-import { cardClass, Court, SportGroupData } from "./types";
+import { cardClass, Court, SportGroupData } from "../types";
 
 export default function SportGroup({
     sport,

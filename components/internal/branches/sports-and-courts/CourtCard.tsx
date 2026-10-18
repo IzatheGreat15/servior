@@ -1,5 +1,5 @@
 import { PiCourtBasketball } from "react-icons/pi";
-import { Court } from "./types";
+import { Court } from "../types";
 
 export default function CourtCard({
   court,

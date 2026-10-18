@@ -1,4 +1,4 @@
-import { DAYS, inputClass, PricingRule } from "./types";
+import { DAYS, inputClass, PricingRule } from "../types";
 
 export default function PricingRuleEditor({
   rule,

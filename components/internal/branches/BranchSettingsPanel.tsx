@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import SectionHeading from "./SectionHeading";
+import SectionHeading from "./sports-and-courts/SectionHeading";
 import { cardClass, inputClass } from "./types";
 
 function Toggle({ label, description, defaultChecked = false }: {

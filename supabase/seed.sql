@@ -159,8 +159,6 @@ BEGIN
       branch_id,
       court_name,
       price,
-      opening_time,
-      closing_time,
       sport_id,
       is_active
     )
@@ -168,8 +166,6 @@ BEGIN
       v_branch_id,
       format('Demo Court %s', lpad(i::text, 3, '0')),
       (300 + i)::real,
-      '06:00',
-      '23:00',
       v_sport_ids[i],
       true
     )

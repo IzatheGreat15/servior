@@ -74,6 +74,7 @@ export default function CustomSelect({
         {/* Select trigger */}
         <button
           type="button"
+          aria-label={`${label}: ${value}`}
           className={`flex h-11 w-full items-center gap-2.5 rounded-lg border bg-white px-3 text-left transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-[#13834e]/15 ${
             open
               ? "border-[#13834e] ring-2 ring-[#13834e]/10"

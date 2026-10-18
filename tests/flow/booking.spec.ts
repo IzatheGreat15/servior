@@ -12,9 +12,10 @@ function dateAfter(days: number) {
 
 async function chooseOption(
   page: import("@playwright/test").Page,
+  label: string,
   value: string,
 ) {
-  await page.getByRole("button", { name: new RegExp(value) }).click();
+  await page.getByRole("button", { name: new RegExp(`^${label}:`) }).click();
   await page.getByRole("option", { name: value, exact: true }).click();
 }
 
@@ -27,8 +28,8 @@ test("saves an uneven multi-court booking and removes its hours from availabilit
   ).toBeVisible();
   await captureEvidence(page, testInfo, "booking-page-loaded");
 
-  await chooseOption(page, "Servior Playwright Test Branch");
-  await chooseOption(page, "Servior Playwright Test Sport");
+  await chooseOption(page, "Branch", "Servior Playwright Test Branch");
+  await chooseOption(page, "Sport", "Servior Playwright Test Sport");
   await page.getByLabel("Date").fill(dateAfter(1));
 
   const court1At7 = page.getByRole("button", {
@@ -40,8 +41,16 @@ test("saves an uneven multi-court booking and removes its hours from availabilit
   const court2At9 = page.getByRole("button", {
     name: "Court 2, 9:00 AM, available",
   });
+  const court1BeforeOpening = page.getByRole("button", {
+    name: "Court 1, 5:00 AM, unavailable",
+  });
+  const court1AtClosing = page.getByRole("button", {
+    name: "Court 1, 10:00 PM, unavailable",
+  });
 
   await expect(court1At7).toBeEnabled();
+  await expect(court1BeforeOpening).toBeDisabled();
+  await expect(court1AtClosing).toBeDisabled();
   await captureEvidence(page, testInfo, "court-options-ready");
   await court1At7.click();
   await court1At8.click();
@@ -134,6 +143,15 @@ test("booking creation is idempotent and rejects an already-held slot conflict",
     slots: [{ courtId: court?.id, startHour: 7 }],
     guest: { name: "Playwright Guest", email: "playwright@example.test" },
   };
+  const outsideHours = await request.post("/api/bookings", {
+    headers: { "Idempotency-Key": crypto.randomUUID() },
+    data: {
+      ...payload,
+      slots: [{ courtId: court?.id, startHour: 22 }],
+    },
+  });
+  expect(outsideHours.status()).toBe(400);
+
   const idempotencyKey = crypto.randomUUID();
 
   const first = await request.post("/api/bookings", {

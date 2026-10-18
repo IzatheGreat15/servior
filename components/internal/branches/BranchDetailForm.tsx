@@ -82,8 +82,8 @@ export default function BranchDetailsForm({
             <IoMdInformationCircle />
           </span>
           <p>
-            These are the branch&apos;s default hours. You can configure individual
-            court availability and pricing rules separately.
+            These hours apply to all courts at this branch. Court-specific
+            pricing rules are configured separately.
           </p>
         </div>
       </section>

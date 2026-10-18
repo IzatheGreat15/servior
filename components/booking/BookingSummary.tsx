@@ -9,6 +9,7 @@ type Props = {
   sport: string;
   dateLabel: string;
   selected: BookingSelection[];
+  totalAmount: number;
   onRemove: (courtId: string, hour: number) => void;
   onClear: () => void;
   onContinue: () => void;
@@ -19,6 +20,7 @@ export default function BookingSummary({
   sport,
   dateLabel,
   selected,
+  totalAmount,
   onRemove,
   onClear,
   onContinue,
@@ -27,10 +29,6 @@ export default function BookingSummary({
     (sum, item) => sum + item.endHour - item.startHour,
     0
   );
-
-  // Demo rate only. Replace with the branch/court's configured rate.
-  const rate = 400;
-  const total = hours * rate;
 
   return (
     <aside className="overflow-hidden rounded-[18px] border border-[#deece3] bg-white/[0.96] shadow-[0_15px_45px_rgba(22,64,43,0.07)]">
@@ -161,12 +159,12 @@ export default function BookingSummary({
               Estimated total
             </span>
             <strong className="text-xl font-bold tracking-[-0.03em] text-[#13834e]">
-              ₱{total.toLocaleString("en-PH")}
+              ₱{totalAmount.toLocaleString("en-PH")}
             </strong>
           </div>
 
           <p className="text-right text-[11px] text-[#809187]">
-            Based on ₱{rate.toLocaleString("en-PH")} per hour
+            Calculated from each court&apos;s hourly rate
           </p>
         </div>
 

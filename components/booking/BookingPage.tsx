@@ -1,15 +1,19 @@
 "use client"
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import BookingHeader from "./BookingHeader";
 import BookingFilters from "./BookingFilters";
 import AvailabilityCalendar from "./AvailabilityCalendar";
 import BookingSummary from "./BookingSummary";
 import type { BookingSelection } from "./types";
-import { COURTS, formatDate, START_HOUR, UNAVAILABLE } from "./types";
-
-const BRANCHES = ["Greenfield Sports Center", "Riverside Courts", "Central Sports Hub"];
-const SPORTS = ["Pickleball", "Badminton", "Tennis", "Basketball"];
+import { formatDate } from "./types";
+import type {
+  BookingAvailability,
+  BookingBranch,
+  BookingCourt,
+  BookingOptions,
+  UnavailableSlot,
+} from "@/lib/booking/options";
 
 function localDateString(date: Date) {
   const year = date.getFullYear();
@@ -18,33 +22,153 @@ function localDateString(date: Date) {
   return `${year}-${month}-${day}`;
 }
 
+function subscribeToDateChanges(onChange: () => void) {
+  window.addEventListener("focus", onChange);
+  document.addEventListener("visibilitychange", onChange);
+
+  return () => {
+    window.removeEventListener("focus", onChange);
+    document.removeEventListener("visibilitychange", onChange);
+  };
+}
+
+function getTodaySnapshot() {
+  return localDateString(new Date());
+}
+
+function getServerDateSnapshot() {
+  return "";
+}
+
 export default function BookingPage() {
-  const [branch, setBranch] = useState(BRANCHES[0]);
-  const [sport, setSport] = useState(SPORTS[0]);
+  const [branch, setBranch] = useState("");
+  const [sport, setSport] = useState("");
+  const today = useSyncExternalStore(
+    subscribeToDateChanges,
+    getTodaySnapshot,
+    getServerDateSnapshot
+  );
   const [date, setDate] = useState("");
+  const bookingDate = date || today;
   const [selected, setSelected] = useState<BookingSelection[]>([]);
+  const [branches, setBranches] = useState<BookingBranch[]>([]);
+  const [courts, setCourts] = useState<BookingCourt[]>([]);
+  const [unavailableSlots, setUnavailableSlots] = useState<UnavailableSlot[]>([]);
+  const [availabilityVersion, setAvailabilityVersion] = useState(0);
+  const [optionsError, setOptionsError] = useState("");
+  const [availabilityError, setAvailabilityError] = useState("");
+  const [bookingError, setBookingError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState("");
   const [showGuestForm, setShowGuestForm] = useState(false);
   const [guestName, setGuestName] = useState("");
   const [guestEmail, setGuestEmail] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
 
   useEffect(() => {
-    setDate(localDateString(new Date()));
+    let cancelled = false;
+
+    async function loadOptions() {
+      try {
+        const response = await fetch("/api/booking/options", {
+          cache: "no-store",
+        });
+        if (!response.ok) throw new Error("options");
+
+        const options = (await response.json()) as BookingOptions;
+        const initialBranch = options.branches[0];
+        if (!initialBranch?.sports.length || !options.sports.length) {
+          throw new Error("empty-options");
+        }
+
+        if (!cancelled) {
+          setBranches(options.branches);
+          setBranch(initialBranch.name);
+          setSport(initialBranch.sports[0].name);
+        }
+      } catch {
+        if (!cancelled) {
+          setOptionsError(
+            "Booking options could not be loaded. Please try again later."
+          );
+        }
+      }
+    }
+
+    void loadOptions();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const dateLabel = useMemo(() => formatDate(date), [date]);
+  const selectedBranch = branches.find((option) => option.name === branch);
+  const selectedSport = selectedBranch?.sports.find(
+    (option) => option.name === sport
+  );
+
+  useEffect(() => {
+    if (!selectedBranch || !selectedSport || !bookingDate) return;
+
+    const branchId = selectedBranch.id;
+    const sportId = selectedSport.id;
+    const controller = new AbortController();
+
+    async function loadAvailability() {
+      try {
+        const params = new URLSearchParams({
+          date: bookingDate,
+          sportId,
+        });
+        const response = await fetch(
+          `/api/branches/${branchId}/availability?${params}`,
+          { cache: "no-store", signal: controller.signal }
+        );
+        if (!response.ok) throw new Error("availability");
+
+        const availability =
+          (await response.json()) as BookingAvailability;
+        setCourts(availability.courts);
+        setUnavailableSlots(availability.unavailableSlots);
+        setAvailabilityError("");
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setCourts([]);
+        setUnavailableSlots([]);
+        setAvailabilityError(
+          "Court availability could not be loaded. Please try again."
+        );
+      }
+    }
+
+    void loadAvailability();
+    return () => controller.abort();
+  }, [bookingDate, selectedBranch, selectedSport, availabilityVersion]);
+
+  const dateLabel = useMemo(() => formatDate(bookingDate), [bookingDate]);
   const selectedHours = useMemo(
     () => selected.reduce((sum, item) => sum + item.endHour - item.startHour, 0),
     [selected]
   );
+  const totalAmount = useMemo(
+    () =>
+      selected.reduce((total, item) => {
+        const court = courts.find((option) => option.id === item.courtId);
+        return total + (court?.pricePerHour ?? 0) * (item.endHour - item.startHour);
+      }, 0),
+    [courts, selected]
+  );
 
   function toggleSlot(courtId: string, hour: number) {
-    if ((UNAVAILABLE[courtId] ?? []).includes(hour)) return;
+    if (
+      unavailableSlots.some(
+        (slot) => slot.courtId === courtId && slot.startHour === hour
+      )
+    ) return;
     setSelected((current) => {
       const exists = current.some((item) => item.courtId === courtId && hour >= item.startHour && hour < item.endHour);
       // Keep each selected hour as a discrete slot; this makes individual hours easy to remove.
       if (exists) return current.filter((item) => !(item.courtId === courtId && hour >= item.startHour && hour < item.endHour));
-      const courtName = COURTS.find((court) => court.id === courtId)?.name ?? courtId;
+      const courtName = courts.find((court) => court.id === courtId)?.name ?? courtId;
       return [...current, { courtId, courtName, startHour: hour, endHour: hour + 1 }]
         .sort((a, b) => a.startHour - b.startHour || a.courtName.localeCompare(b.courtName));
     });
@@ -55,7 +179,8 @@ export default function BookingPage() {
   }
 
   function changeDate(days: number) {
-    const next = new Date(`${date}T12:00:00`);
+    if (!bookingDate) return;
+    const next = new Date(`${bookingDate}T12:00:00`);
     next.setDate(next.getDate() + days);
 
     const nextDate = localDateString(next);
@@ -65,28 +190,87 @@ export default function BookingPage() {
 
     setDate(nextDate);
     setSelected([]);
+    setBookingSuccess("");
   }
 
   function changeBranch(value: string) {
+    const nextBranch = branches.find((option) => option.name === value);
     setBranch(value);
+    setSport(nextBranch?.sports[0]?.name ?? "");
     setSelected([]);
+    setBookingSuccess("");
   }
 
   function changeSport(value: string) {
     setSport(value);
     setSelected([]);
+    setBookingSuccess("");
   }
 
-  function submitGuestDetails(event: React.FormEvent<HTMLFormElement>) {
+  async function submitGuestDetails(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const bookingDraft = {
-      branch, sport, date, selections: selected,
-      guest: { name: guestName, email: guestEmail, phone: guestPhone },
-    };
-    // Demo behaviour: replace with a Server Action/API call that creates a temporary booking hold.
-    alert(`Booking details captured for ${guestName}.\\n${selectedHours} court-hour(s) selected.\\nConnect this form to your booking API to save the reservation.`);
-    console.info("Servior booking draft:", bookingDraft);
-    setShowGuestForm(false);
+    setIsSubmitting(true);
+    setBookingError("");
+
+    try {
+      const response = await fetch("/api/bookings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": crypto.randomUUID(),
+        },
+        body: JSON.stringify({
+          branchId: selectedBranch?.id,
+          sportId: selectedSport?.id,
+          date: bookingDate,
+          slots: selected.map((item) => ({
+            courtId: item.courtId,
+            startHour: item.startHour,
+          })),
+          guest: {
+            name: guestName,
+            email: guestEmail,
+            phone: guestPhone || undefined,
+          },
+        }),
+      });
+
+      if (response.status === 409) {
+        setBookingError(
+          "One or more selected times were just booked. Refresh availability and try again."
+        );
+        setAvailabilityVersion((version) => version + 1);
+        return;
+      }
+      if (!response.ok) {
+        setBookingError(
+          "Your booking hold could not be created. Please try again."
+        );
+        return;
+      }
+
+      const booking = (await response.json()) as {
+        id: string;
+        expiresAt: string;
+      };
+      setBookingSuccess(
+        `Booking hold ${booking.id} created. It expires at ${new Date(
+          booking.expiresAt
+        ).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}.`
+      );
+      setShowGuestForm(false);
+      setSelected([]);
+      setGuestName("");
+      setGuestEmail("");
+      setGuestPhone("");
+      setAvailabilityVersion((version) => version + 1);
+    } catch {
+      setBookingError(
+        "The booking service could not be reached. Please try again."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
 
@@ -122,18 +306,37 @@ export default function BookingPage() {
           </p>
         </section>
 
+        {(optionsError || availabilityError) && (
+          <p
+            className="mx-5 mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800"
+            role="alert"
+          >
+            {optionsError || availabilityError}
+          </p>
+        )}
+
+        {bookingSuccess && (
+          <p
+            className="mx-5 mt-4 rounded-lg bg-green-50 p-3 text-sm text-green-900"
+            role="status"
+          >
+            {bookingSuccess}
+          </p>
+        )}
+
         <BookingFilters
           branch={branch}
           setBranch={changeBranch}
           sport={sport}
           setSport={changeSport}
-          date={date}
+          date={bookingDate}
+          today={today}
           setDate={(value) => {
             setDate(value);
             setSelected([]);
           }}
-          branches={BRANCHES}
-          sports={SPORTS}
+          branches={branches.map((option) => option.name)}
+          sports={selectedBranch?.sports.map((option) => option.name) ?? []}
           onDateStep={changeDate}
         />
 
@@ -156,6 +359,8 @@ export default function BookingPage() {
 
             <AvailabilityCalendar
               selected={selected}
+              courts={courts}
+              unavailableSlots={unavailableSlots}
               onToggle={toggleSlot}
             />
           </section>
@@ -165,6 +370,7 @@ export default function BookingPage() {
             sport={sport}
             dateLabel={dateLabel}
             selected={selected}
+            totalAmount={totalAmount}
             onRemove={removeSlot}
             onClear={() => setSelected([])}
             onContinue={() => setShowGuestForm(true)}
@@ -223,6 +429,12 @@ export default function BookingPage() {
               You can book as a guest—no account or login required.
             </p>
 
+            {bookingError && (
+            <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-800" role="alert">
+              {bookingError}
+            </p>
+            )}
+
             <div className="mt-5 rounded-xl bg-brand-light p-3 text-sm font-medium text-brand-dark">
               {selected.length} selected slot(s) · {selectedHours} court-hour(s) · {dateLabel}
             </div>
@@ -268,8 +480,10 @@ export default function BookingPage() {
               <button
                 className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3.5 font-semibold text-white transition hover:bg-brand-dark focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2"
                 type="submit"
+                disabled={isSubmitting}
               >
-                Continue to payment <span aria-hidden="true">→</span>
+                {isSubmitting ? "Creating hold..." : "Create booking hold"}{" "}
+                {!isSubmitting && <span aria-hidden="true">→</span>}
               </button>
             </form>
           </section>

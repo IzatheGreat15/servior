@@ -22,6 +22,20 @@ export type SportGroupData = {
   courts: Court[];
 };
 
+export type BranchDetails = {
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  openingTime: string;
+  closingTime: string;
+};
+
+export type BranchRecord = BranchDetails & {
+  id: string;
+  sports: SportGroupData[];
+};
+
 export const inputClass =
   "mt-1.5 w-full rounded-xl border border-[#d8e2dc] bg-white px-3.5 py-3 text-sm text-[#102d29] outline-none transition placeholder:text-slate-400 focus:border-[#13834e] focus:ring-4 focus:ring-[#13834e]/10";
 

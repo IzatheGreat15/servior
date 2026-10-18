@@ -4,7 +4,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { LuCalendarPlus, LuSearch, LuX } from "react-icons/lu";
-import { Booking, mockBookings } from "@/components/internal/bookings/types";
+import type { Booking } from "@/components/internal/bookings/types";
 import BookingTabs, { BookingTab } from "@/components/internal/bookings/BookingTabs";
 import BookingList from "@/components/internal/bookings/BookingList";
 import BookingDetailsModal from "@/components/internal/bookings/BookingDetailsModal";
@@ -52,32 +52,68 @@ export default function BookingsPage() {
   const [activeTab, setActiveTab] = useState<BookingTab>("upcoming");
   const [search, setSearch] = useState("");
   const [todayKey, setTodayKey] = useState("");
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(
     null
   );
 
   useEffect(() => {
-    setTodayKey(getTodayKey);
+    setTodayKey(getTodayKey());
+  }, []);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadBookings() {
+      try {
+        const response = await fetch("/api/me/bookings?pageSize=1000", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          setErrorMessage(
+            response.status === 401
+              ? "Sign in to view your bookings."
+              : "Your bookings could not be loaded.",
+          );
+          return;
+        }
+
+        const result = (await response.json()) as { items?: Booking[] };
+        if (!Array.isArray(result.items)) {
+          setErrorMessage("Your bookings could not be loaded.");
+          return;
+        }
+        setBookings(result.items);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setErrorMessage("Your bookings could not be loaded.");
+      }
+    }
+
+    void loadBookings();
+    return () => controller.abort();
   }, []);
 
   const counts = useMemo<Record<BookingTab, number>>(() => {
     return {
-      upcoming: mockBookings.filter((booking) =>
+      upcoming: bookings.filter((booking) =>
         matchesTab(booking, "upcoming", todayKey)
       ).length,
-      completed: mockBookings.filter((booking) =>
+      completed: bookings.filter((booking) =>
         matchesTab(booking, "completed", todayKey)
       ).length,
-      cancelled: mockBookings.filter((booking) =>
+      cancelled: bookings.filter((booking) =>
         matchesTab(booking, "cancelled", todayKey)
       ).length,
     };
-  }, [todayKey]);
+  }, [bookings, todayKey]);
 
   const filteredBookings = useMemo(() => {
     const query = search.trim().toLowerCase();
 
-    return mockBookings
+    return bookings
       .filter((booking) => matchesTab(booking, activeTab, todayKey))
       .filter((booking) => {
         if (!query) return true;
@@ -99,7 +135,7 @@ export default function BookingsPage() {
       .sort((a, b) => {
         return getFirstSessionDate(a).localeCompare(getFirstSessionDate(b));
       });
-  }, [activeTab, search, todayKey]);
+  }, [activeTab, bookings, search, todayKey]);
 
   const closeModal = useCallback(() => {
     setSelectedBooking(null);
@@ -176,6 +212,11 @@ export default function BookingsPage() {
           </div>
 
           <div className="mt-6">
+            {errorMessage && (
+              <p role="alert" className="mb-4 text-sm text-red-600">
+                {errorMessage}
+              </p>
+            )}
             <BookingList
               bookings={filteredBookings}
               hasSearch={search.trim().length > 0}

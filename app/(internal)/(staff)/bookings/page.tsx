@@ -1,11 +1,46 @@
 "use client";
 
 import BookingsTable from "@/components/internal/admin/dashboard/BookingsTable";
-import { Booking, mockBookings } from "@/components/internal/bookings/types";
-import { useState } from "react";
+import type { Booking } from "@/components/internal/bookings/types";
+import { useEffect, useState } from "react";
 
 export default function BookingsPage() {
-  const [bookings, setBookings] = useState<Booking[]>(mockBookings);
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadBookings() {
+      try {
+        const response = await fetch("/api/bookings?pageSize=1000", {
+          cache: "no-store",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          setErrorMessage(
+            response.status === 401 || response.status === 403
+              ? "Sign in with staff access to view bookings."
+              : "Bookings could not be loaded.",
+          );
+          return;
+        }
+
+        const result = (await response.json()) as { items?: Booking[] };
+        if (!Array.isArray(result.items)) {
+          setErrorMessage("Bookings could not be loaded.");
+          return;
+        }
+        setBookings(result.items);
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+        setErrorMessage("Bookings could not be loaded.");
+      }
+    }
+
+    void loadBookings();
+    return () => controller.abort();
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -18,6 +53,8 @@ export default function BookingsPage() {
           View and manage all venue bookings.
         </p>
       </div>
+
+      {errorMessage && <p role="alert" className="text-sm text-red-600">{errorMessage}</p>}
 
       {/* Bookings table */}
       <BookingsTable

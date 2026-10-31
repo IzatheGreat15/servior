@@ -12,25 +12,6 @@ import {
 const MAX_PHOTOS = 5;
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-const ACCEPTED_TYPES = [
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-];
-
-type BranchPhoto = {
-  id: string;
-  file: File;
-  preview: string;
-};
-
-type DaySchedule = {
-  day: string;
-  isOpen: boolean;
-  opening: string;
-  closing: string;
-};
-
 export default function BranchDetailsForm({
   value,
   onChange,
